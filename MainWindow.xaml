@@ -8,14 +8,41 @@
         mc:Ignorable="d"
         Title="Logic Picture - PC Level Editor" Height="450" Width="800">
     <Window.CommandBindings>
+        <CommandBinding x:Name="commandBinding_New" Command="New" CanExecute="commandBinding_New_CanExecute" Executed="commandBinding_New_Executed"/>
         <CommandBinding x:Name="commandBinding_Save" Command="Save" CanExecute="commandBinding_Save_CanExecute" Executed="commandBinding_Save_Executed"/>
     </Window.CommandBindings>
     <StackPanel>
         <Menu>
             <MenuItem Header="File">
+                <MenuItem Command="New"/>
                 <MenuItem Command="Save"/>
             </MenuItem>
         </Menu>
+        <ToolBar>
+            <Button Command="New" ToolTip="New">
+                <Viewbox Name="vNewProject" Width="24" Height="24" Stretch="Uniform">
+                    <Canvas Width="44" Height="44">
+                        <Path Fill="#FF000000">
+                            <Path.Data>
+                                <PathGeometry Figures="M 4 1 H 28 L 40 13 V 43 H 4 Z M 8 5 V 39 H 36 V 18 H 23 V 5 Z m 19 0 v 9 h 9 z"/>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
+                </Viewbox>
+            </Button>
+            <Separator/>
+            <Button Command="Save" ToolTip="Save">
+                <Viewbox Name="vSaveProject" Width="24" Height="24" Stretch="Uniform">
+                    <Canvas Width="36" Height="36">
+                        <Path Fill="#FF000000">
+                            <Path.Data>
+                                <PathGeometry Figures="M 1 1 H 35 V 35 H 25.727291 V 24.181774 H 10.272709 V 35 H 1 Z m 12.363645 34 v -4.636355 h 6.181774 V 35 Z M 7.1818715 4.090936 v 9.272709 H 28.818129 V 4.090936 Z"/>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
+                </Viewbox>
+            </Button>
+        </ToolBar>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

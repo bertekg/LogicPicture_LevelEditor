@@ -27,23 +27,56 @@ namespace LogicPictureLE
     {
         public MainWindow()
         {
-            //SetCultureInfo("en-EN");
+            SetCultureInfo("en-EN");
             InitializeComponent();
         }
+        SingleLevel level;
         private static void SetCultureInfo(string cultureInfoToSet)
         {
             CultureInfo ci = new CultureInfo(cultureInfoToSet);
             Thread.CurrentThread.CurrentCulture = ci;
             Thread.CurrentThread.CurrentUICulture = ci;
         }
+        private void commandBinding_New_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        private void commandBinding_New_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (level != null)
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want create new project and clear all current project data?",
+                "Question befor creation new file", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    CreateNewLevel();
+                }
+            }
+            else
+            {                
+                CreateNewLevel();
+            }
+        }
+        private void CreateNewLevel()
+        {
+            NewLevelWizard newLevelWizard = new NewLevelWizard();
+            newLevelWizard.ShowDialog();
+            if (newLevelWizard.singleLevel != null)
+            {
+                level = newLevelWizard.singleLevel;
+                UpdateNewLevelData();
+            }
+        }
+        private void UpdateNewLevelData()
+        {
+            textBox_LevelName.Text = level.Name;
+            xctkByteUpDown_LevelWidth.Value = level.Width;
+            xctkByteUpDown_LevelHeight.Value = level.Height;
+        }
+
         private void commandBinding_Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if(textBox_LevelName.Text != string.Empty &
-                xctkByteUpDown_LevelWidth.Value.HasValue &
-                xctkByteUpDown_LevelHeight.Value.HasValue)
-            {
-                e.CanExecute = true;
-            }
+            e.CanExecute = true;
         }
         private void commandBinding_Save_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -69,6 +102,6 @@ namespace LogicPictureLE
 
                 File.WriteAllText(saveFileDialog.FileName, jsonContent);
             }
-        }
+        }       
     }
 }
