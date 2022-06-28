@@ -11,14 +11,20 @@
         <CommandBinding x:Name="commandBinding_New" Command="New" CanExecute="commandBinding_New_CanExecute" Executed="commandBinding_New_Executed"/>
         <CommandBinding x:Name="commandBinding_Save" Command="Save" CanExecute="commandBinding_Save_CanExecute" Executed="commandBinding_Save_Executed"/>
     </Window.CommandBindings>
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="File">
                 <MenuItem Command="New"/>
                 <MenuItem Command="Save"/>
             </MenuItem>
         </Menu>
-        <ToolBar>
+        <ToolBar Grid.Row="1">
             <Button Command="New" ToolTip="New">
                 <Viewbox Name="vNewProject" Width="24" Height="24" Stretch="Uniform">
                     <Canvas Width="44" Height="44">
@@ -43,29 +49,33 @@
                 </Viewbox>
             </Button>
         </ToolBar>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid Width="250">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="Level name" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5"/>
-                <TextBox Name="textBox_LevelName" Text="SampleName" Grid.Column="1" VerticalAlignment="Center" Margin="5"/>
-                <TextBlock Text="Level width" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5"/>
-                <xctk:ByteUpDown Name="xctkByteUpDown_LevelWidth" Value="5" Minimum="1" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="5"/>
-                <TextBlock Text="Level height" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5"/>
-                <xctk:ByteUpDown Name="xctkByteUpDown_LevelHeight" Value="10" Minimum="1" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="5"/>
-            </Grid>
-            <Button Command="Save" Grid.Row="1" Content="SaveAs" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10"/>
-        </Grid>
-    </StackPanel>    
+        <Grid Name="grid_MainContent" Grid.Row="2"/>
+        <StatusBar Name="sbBottomInfo" Grid.Row="3">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Text="Current Cell"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1">
+                <TextBox x:Name="tbCurrentGrid" Text="X:0, Y:0" VerticalAlignment="Center" IsReadOnly="True"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="3">
+                <TextBlock Text="Project Path"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="4">
+                <TextBox Name="sbiProjectPath" VerticalAlignment="Center" IsReadOnly="True"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>    
 </Window>

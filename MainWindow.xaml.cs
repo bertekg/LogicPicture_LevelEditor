@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
 using System.IO;
+using LogicPictureLE.UserControls;
 
 namespace LogicPictureLE
 {
@@ -31,6 +32,7 @@ namespace LogicPictureLE
             InitializeComponent();
         }
         SingleLevel level;
+        SingleLevelEditor editor;
         private static void SetCultureInfo(string cultureInfoToSet)
         {
             CultureInfo ci = new CultureInfo(cultureInfoToSet);
@@ -64,16 +66,11 @@ namespace LogicPictureLE
             if (newLevelWizard.singleLevel != null)
             {
                 level = newLevelWizard.singleLevel;
-                UpdateNewLevelData();
+                grid_MainContent.Children.Clear();
+                editor = new SingleLevelEditor(level);
+                grid_MainContent.Children.Add(editor);
             }
         }
-        private void UpdateNewLevelData()
-        {
-            textBox_LevelName.Text = level.Name;
-            xctkByteUpDown_LevelWidth.Value = level.Width;
-            xctkByteUpDown_LevelHeight.Value = level.Height;
-        }
-
         private void commandBinding_Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -83,25 +80,27 @@ namespace LogicPictureLE
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "JSON|*.json";
             saveFileDialog.Title = "Save Level File";
-            string defaultFileName = textBox_LevelName.Text + "_" +
-                xctkByteUpDown_LevelWidth.Value.Value.ToString("D2") + "_" +
-                xctkByteUpDown_LevelHeight.Value.Value.ToString("D2");
+            string defaultFileName = editor.textBox_LevelName.Text + "_" +
+                editor.xctkByteUpDown_LevelWidth.Value.Value.ToString("D2") + "_" +
+                editor.xctkByteUpDown_LevelHeight.Value.Value.ToString("D2");
             saveFileDialog.FileName = defaultFileName;
-            saveFileDialog.ShowDialog();
+            bool? saveResult = saveFileDialog.ShowDialog();
 
-            if (saveFileDialog.FileName != String.Empty)
+            if (saveFileDialog.FileName != String.Empty && saveResult.Value == true)
             {
                 SingleLevel singleLevel = new SingleLevel
                 {
-                    Name = textBox_LevelName.Text,
-                    Width = xctkByteUpDown_LevelWidth.Value.Value,
-                    Height = xctkByteUpDown_LevelHeight.Value.Value
+                    Name = editor.textBox_LevelName.Text,
+                    Width = editor.xctkByteUpDown_LevelWidth.Value.Value,
+                    Height = editor.xctkByteUpDown_LevelHeight.Value.Value
                 };
 
                 string jsonContent = JsonConvert.SerializeObject(singleLevel);
 
                 File.WriteAllText(saveFileDialog.FileName, jsonContent);
+                MessageBox.Show("Save file finished correct. File path:\n" + saveFileDialog.FileName,
+                    "Information after save project", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-        }       
+        }
     }
 }
