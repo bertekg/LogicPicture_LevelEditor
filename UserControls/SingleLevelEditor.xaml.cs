@@ -25,32 +25,36 @@ namespace LogicPictureLE.UserControls
             UpdateBasicData();
             DrawAllLevelCells();
         }
+        public SingleLevel GetSingleLevel()
+        {
+            return singleLevel;
+        }
         private void UpdateBasicData()
         {
             textBox_LevelName.Text = singleLevel.Name;
-            xctkByteUpDown_LevelWidth.Value = singleLevel.Width;
-            xctkByteUpDown_LevelHeight.Value = singleLevel.Height;
+            xctkByteUpDown_LevelWidth.Value = singleLevel.Level.WidthX;
+            xctkByteUpDown_LevelHeight.Value = singleLevel.Level.HeightY;
         }
         private void DrawAllLevelCells()
         {
             gMainPlaceGrid.Children.Clear();
             gMainPlaceGrid.RowDefinitions.Clear();
             gMainPlaceGrid.ColumnDefinitions.Clear();
-            for (int i = 0; i < singleLevel.Width; i++)
+            for (int i = 0; i < singleLevel.Level.WidthX; i++)
             {
                 ColumnDefinition gridCol = new ColumnDefinition();
                 gridCol.Width = new GridLength(20);
                 gMainPlaceGrid.ColumnDefinitions.Add(gridCol);
             }
-            for (int i = 0; i < singleLevel.Height; i++)
+            for (int i = 0; i < singleLevel.Level.HeightY; i++)
             {
                 RowDefinition gridRow = new RowDefinition();
                 gridRow.Height = new GridLength(20);
                 gMainPlaceGrid.RowDefinitions.Add(gridRow);
             }
-            for (int i = 0; i < singleLevel.Width; i++)
+            for (int i = 0; i < singleLevel.Level.WidthX; i++)
             {
-                for (int j = 0; j < singleLevel.Height; j++)
+                for (int j = 0; j < singleLevel.Level.HeightY; j++)
                 {
                     Rectangle rectangleTemp = new Rectangle();
                     Point newPoint = new Point(i, j);
@@ -61,7 +65,7 @@ namespace LogicPictureLE.UserControls
                     rectangleTemp.HorizontalAlignment = HorizontalAlignment.Stretch;
                     rectangleTemp.VerticalAlignment = VerticalAlignment.Stretch;
                     Grid.SetColumn(rectangleTemp, i);
-                    Grid.SetRow(rectangleTemp, (singleLevel.Height - 1) - j);
+                    Grid.SetRow(rectangleTemp, (singleLevel.Level.HeightY - 1) - j);
                     rectangleTemp.Fill = new SolidColorBrush(Colors.White);
                     gMainPlaceGrid.Children.Add(rectangleTemp);
                 }
@@ -96,8 +100,8 @@ namespace LogicPictureLE.UserControls
         }
         private void commandBinding_Update_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            singleLevel.Width = xctkByteUpDown_LevelWidth.Value.Value;
-            singleLevel.Height = xctkByteUpDown_LevelHeight.Value.Value;
+            singleLevel.Level.WidthX = xctkByteUpDown_LevelWidth.Value.Value;
+            singleLevel.Level.HeightY = xctkByteUpDown_LevelHeight.Value.Value;
             DrawAllLevelCells();
         }
     }

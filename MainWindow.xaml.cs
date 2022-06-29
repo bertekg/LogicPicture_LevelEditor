@@ -31,7 +31,7 @@ namespace LogicPictureLE
             SetCultureInfo("en-EN");
             InitializeComponent();
         }
-        SingleLevel level;
+        SingleLevel singleLevel;
         SingleLevelEditor editor;
         private static void SetCultureInfo(string cultureInfoToSet)
         {
@@ -45,7 +45,7 @@ namespace LogicPictureLE
         }
         private void commandBinding_New_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (level != null)
+            if (singleLevel != null)
             {
                 MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want create new project and clear all current project data?",
                 "Question befor creation new file", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -65,9 +65,9 @@ namespace LogicPictureLE
             newLevelWizard.ShowDialog();
             if (newLevelWizard.singleLevel != null)
             {
-                level = newLevelWizard.singleLevel;
+                singleLevel = newLevelWizard.singleLevel;
                 grid_MainContent.Children.Clear();
-                editor = new SingleLevelEditor(level);
+                editor = new SingleLevelEditor(singleLevel);
                 grid_MainContent.Children.Add(editor);
             }
         }
@@ -88,14 +88,7 @@ namespace LogicPictureLE
 
             if (saveFileDialog.FileName != String.Empty && saveResult.Value == true)
             {
-                SingleLevel singleLevel = new SingleLevel
-                {
-                    Name = editor.textBox_LevelName.Text,
-                    Width = editor.xctkByteUpDown_LevelWidth.Value.Value,
-                    Height = editor.xctkByteUpDown_LevelHeight.Value.Value
-                };
-
-                string jsonContent = JsonConvert.SerializeObject(singleLevel);
+                string jsonContent = JsonConvert.SerializeObject(editor.GetSingleLevel());
 
                 File.WriteAllText(saveFileDialog.FileName, jsonContent);
                 MessageBox.Show("Save file finished correct. File path:\n" + saveFileDialog.FileName,

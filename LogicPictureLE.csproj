@@ -73,13 +73,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ColorData.cs" />
+    <Compile Include="HintData.cs" />
     <Compile Include="NewLevelWizard.xaml.cs">
       <DependentUpon>NewLevelWizard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SingleLevel.cs" />
+    <Compile Include="TileData.cs" />
     <Compile Include="UserControls\SingleLevelEditor.xaml.cs">
       <DependentUpon>SingleLevelEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SingleLevel.cs" />
+    <Compile Include="Level.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

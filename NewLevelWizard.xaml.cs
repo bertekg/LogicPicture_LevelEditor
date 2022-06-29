@@ -28,8 +28,8 @@ namespace LogicPictureLE
         {
             singleLevel = new SingleLevel();
             singleLevel.Name = "Empty Single Level";
-            singleLevel.Width = 5;
-            singleLevel.Height = 5;
+            singleLevel.Level.WidthX = 5;
+            singleLevel.Level.HeightY = 5;
             this.Close();
         }
         private void button_EmptyBig_Click(object sender, RoutedEventArgs e)
