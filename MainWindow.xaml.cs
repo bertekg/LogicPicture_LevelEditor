@@ -32,7 +32,7 @@ namespace LogicPictureLE
             InitializeComponent();
         }
         SingleLevel singleLevel;
-        SingleLevelEditor editor;
+        SingleLevelEditor singleLevelEditor;
         private static void SetCultureInfo(string cultureInfoToSet)
         {
             CultureInfo ci = new CultureInfo(cultureInfoToSet);
@@ -67,8 +67,32 @@ namespace LogicPictureLE
             {
                 singleLevel = newLevelWizard.singleLevel;
                 grid_MainContent.Children.Clear();
-                editor = new SingleLevelEditor(singleLevel);
-                grid_MainContent.Children.Add(editor);
+                singleLevelEditor = new SingleLevelEditor(singleLevel);
+                grid_MainContent.Children.Add(singleLevelEditor);
+            }
+        }
+        private void commandBinding_Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        private void commandBinding_Open_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JSON|*.json";
+            openFileDialog.Title = "Save Level File";
+            bool? openResult = openFileDialog.ShowDialog();
+            if (openFileDialog.FileName != String.Empty && openResult.Value == true)
+            {
+                try
+                {
+                    string contenJSON = File.ReadAllText(openFileDialog.FileName);
+                    SingleLevel singleLevel = JsonConvert.DeserializeObject<SingleLevel>(contenJSON);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
         }
         private void commandBinding_Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -80,15 +104,16 @@ namespace LogicPictureLE
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "JSON|*.json";
             saveFileDialog.Title = "Save Level File";
-            string defaultFileName = editor.textBox_LevelName.Text + "_" +
-                editor.xctkByteUpDown_LevelWidth.Value.Value.ToString("D2") + "_" +
-                editor.xctkByteUpDown_LevelHeight.Value.Value.ToString("D2");
+            SingleLevel singleLevel = singleLevelEditor.GetSingleLevelData();
+            string defaultFileName = singleLevel.NameEnglish + "_" +
+                singleLevel.LevelData.WidthX.ToString("D2") + "_" +
+                singleLevel.LevelData.HeightY.ToString("D2");
             saveFileDialog.FileName = defaultFileName;
             bool? saveResult = saveFileDialog.ShowDialog();
 
             if (saveFileDialog.FileName != String.Empty && saveResult.Value == true)
             {
-                string jsonContent = JsonConvert.SerializeObject(editor.GetSingleLevel());
+                string jsonContent = JsonConvert.SerializeObject(singleLevel);
 
                 File.WriteAllText(saveFileDialog.FileName, jsonContent);
                 MessageBox.Show("Save file finished correct. File path:\n" + saveFileDialog.FileName,

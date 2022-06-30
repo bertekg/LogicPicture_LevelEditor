@@ -4,82 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LogicPictureLE.UserControls"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
-             d:DesignHeight="720" d:DesignWidth="1280">
-    <UserControl.CommandBindings>
-        <CommandBinding x:Name="commandBinding_Update" Command="ApplicationCommands.Replace" CanExecute="commandBinding_Update_CanExecute" Executed="commandBinding_Update_Executed"/>
-    </UserControl.CommandBindings>
-    <Grid Name="gMainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="200"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel>
-            <Grid>
-                <Grid.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="HorizontalAlignment" Value="Right"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                    </Style>
-                    <Style TargetType="xctk:ByteUpDown">
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="Margin" Value="5"/>
-                        <Setter Property="Minimum" Value="1"/>
-                    </Style>
-                </Grid.Resources>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="Level name" Grid.Row="0" Grid.Column="0"/>
-                <TextBox Name="textBox_LevelName" Text="SampleName" Grid.Column="1" 
-                     VerticalAlignment="Center" Margin="5"/>
-                <TextBlock Text="Level width" Grid.Row="1" Grid.Column="0"/>
-                <xctk:ByteUpDown Name="xctkByteUpDown_LevelWidth" Value="5" 
-                             Grid.Row="1" Grid.Column="1"/>
-                <TextBlock Text="Level height" Grid.Row="2" Grid.Column="0"/>
-                <xctk:ByteUpDown Name="xctkByteUpDown_LevelHeight" Value="10" 
-                             Grid.Row="2" Grid.Column="1"/>
-            </Grid>
-            <Button Command="ApplicationCommands.Replace" Content="Upadte" Margin="5" Padding="5" HorizontalAlignment="Center"/>
-        </StackPanel>
-        <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="5"/>
-        <Viewbox Name="vPlaceAllCells" Grid.Column="2" Stretch="Uniform">
-            <Grid Name="gMainPlaceGrid" HorizontalAlignment="Stretch" Background="Gray" ShowGridLines="True">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="20"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="20"/>
-                </Grid.ColumnDefinitions>
-                <Rectangle Fill="Red"/>
-                <Rectangle Fill="Yellow" Grid.Column="1"/>
-                <Rectangle Fill="Blue" Grid.Row="1"/>
-                <Rectangle Fill="Green" Grid.Row="1" Grid.Column="1"/>
-                <Rectangle Fill="Cyan" Grid.Row="2"/>
-                <Rectangle Fill="Purple" Grid.Row="2" Grid.Column="1"/>
-            </Grid>
-        </Viewbox>
-        <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="3" ResizeBehavior="PreviousAndNext" Width="5"/>
-        <Grid Grid.Column="4">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <Grid>
-                    <TextBlock Text="Used Colors and Selection Mode TODO" TextWrapping="Wrap"/>
-                </Grid>
-            </ScrollViewer>
-           
-        </Grid>
-    </Grid>
+             d:DesignHeight="450" d:DesignWidth="800">
+    <TabControl>
+        <TabItem Header="Main data">
+            <StackPanel>
+                <GroupBox Header="Names" HorizontalAlignment="Center">
+                    <Grid>
+                        <Grid.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="5"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Level name (English)" Grid.Row="0" Grid.Column="0"/>
+                        <TextBox Name="textBox_LevelNameEnglish" Text="SampleNameEN" 
+                                 Grid.Row="0" Grid.Column="1"/>
+                        <TextBlock Text="Level name (English)" Grid.Row="1" Grid.Column="0"/>
+                        <TextBox Name="textBox_LevelNamePolish" Text="SampleNamePL"
+                                 Grid.Row="1" Grid.Column="1"/>
+                    </Grid>
+                </GroupBox>                
+            </StackPanel>
+        </TabItem>
+        <TabItem Name="tabItem_LevelData" Header="Level data"/>
+    </TabControl>
 </UserControl>

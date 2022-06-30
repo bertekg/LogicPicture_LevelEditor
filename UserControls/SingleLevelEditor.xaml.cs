@@ -15,94 +15,37 @@ using System.Windows.Shapes;
 
 namespace LogicPictureLE.UserControls
 {
+    /// <summary>
+    /// Logika interakcji dla klasy SingleLevelEditor.xaml
+    /// </summary>
     public partial class SingleLevelEditor : UserControl
     {
         SingleLevel singleLevel;
+        LevelEditor levelEditor;
         public SingleLevelEditor(SingleLevel levelData)
         {
             InitializeComponent();
             singleLevel = levelData;
-            UpdateBasicData();
-            DrawAllLevelCells();
+            LoadLevelData();
         }
-        public SingleLevel GetSingleLevel()
+        private void LoadLevelData()
         {
+            textBox_LevelNameEnglish.Text = singleLevel.NameEnglish;
+            textBox_LevelNamePolish.Text = singleLevel.NamePolish;
+
+            levelEditor = new LevelEditor(singleLevel.LevelData);
+            tabItem_LevelData.Content = levelEditor;
+        }
+        public SingleLevel GetSingleLevelData()
+        {
+            UpadateLevelNames();
+            singleLevel.LevelData = levelEditor.GetLevelData();
             return singleLevel;
         }
-        private void UpdateBasicData()
+        public void UpadateLevelNames()
         {
-            textBox_LevelName.Text = singleLevel.Name;
-            xctkByteUpDown_LevelWidth.Value = singleLevel.Level.WidthX;
-            xctkByteUpDown_LevelHeight.Value = singleLevel.Level.HeightY;
-        }
-        private void DrawAllLevelCells()
-        {
-            gMainPlaceGrid.Children.Clear();
-            gMainPlaceGrid.RowDefinitions.Clear();
-            gMainPlaceGrid.ColumnDefinitions.Clear();
-            for (int i = 0; i < singleLevel.Level.WidthX; i++)
-            {
-                ColumnDefinition gridCol = new ColumnDefinition();
-                gridCol.Width = new GridLength(20);
-                gMainPlaceGrid.ColumnDefinitions.Add(gridCol);
-            }
-            for (int i = 0; i < singleLevel.Level.HeightY; i++)
-            {
-                RowDefinition gridRow = new RowDefinition();
-                gridRow.Height = new GridLength(20);
-                gMainPlaceGrid.RowDefinitions.Add(gridRow);
-            }
-            for (int i = 0; i < singleLevel.Level.WidthX; i++)
-            {
-                for (int j = 0; j < singleLevel.Level.HeightY; j++)
-                {
-                    Rectangle rectangleTemp = new Rectangle();
-                    Point newPoint = new Point(i, j);
-                    rectangleTemp.Tag = newPoint;
-                    rectangleTemp.MouseLeftButtonDown += RectangleTemp_MouseLeftButtonDown;
-                    rectangleTemp.MouseRightButtonDown += RectangleTemp_MouseRightButtonDown;
-                    rectangleTemp.MouseEnter += RectangleTemp_MouseEnter;
-                    rectangleTemp.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    rectangleTemp.VerticalAlignment = VerticalAlignment.Stretch;
-                    Grid.SetColumn(rectangleTemp, i);
-                    Grid.SetRow(rectangleTemp, (singleLevel.Level.HeightY - 1) - j);
-                    rectangleTemp.Fill = new SolidColorBrush(Colors.White);
-                    gMainPlaceGrid.Children.Add(rectangleTemp);
-                }
-            }            
-        }
-        private void RectangleTemp_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Point pTempTag = GetPointFromTag(sender);
-            MessageBox.Show("You press left mouse button on cell: " + pTempTag.ToString());
-        }
-        private void RectangleTemp_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Point pTempTag = GetPointFromTag(sender);
-            MessageBox.Show("You press right mouse button on cell: " + pTempTag.ToString());
-        }
-        private static Point GetPointFromTag(object sender)
-        {
-            Rectangle rectangleTemp = (Rectangle)sender;
-            Point pTempTag = (Point)rectangleTemp.Tag;
-            return pTempTag;
-        }
-        private void RectangleTemp_MouseEnter(object sender, MouseEventArgs e)
-        {
-
-        }
-        private void commandBinding_Update_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (xctkByteUpDown_LevelWidth.Value.HasValue && xctkByteUpDown_LevelWidth.Value.HasValue)
-            {
-                e.CanExecute = true;
-            }            
-        }
-        private void commandBinding_Update_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            singleLevel.Level.WidthX = xctkByteUpDown_LevelWidth.Value.Value;
-            singleLevel.Level.HeightY = xctkByteUpDown_LevelHeight.Value.Value;
-            DrawAllLevelCells();
+            singleLevel.NameEnglish = textBox_LevelNameEnglish.Text;
+            singleLevel.NamePolish = textBox_LevelNamePolish.Text;
         }
     }
 }

@@ -9,6 +9,7 @@
         Title="Logic Picture - PC Level Editor" Height="450" Width="800">
     <Window.CommandBindings>
         <CommandBinding x:Name="commandBinding_New" Command="New" CanExecute="commandBinding_New_CanExecute" Executed="commandBinding_New_Executed"/>
+        <CommandBinding x:Name="commandBinding_Open" Command="Open" CanExecute="commandBinding_Open_CanExecute" Executed="commandBinding_Open_Executed"/>
         <CommandBinding x:Name="commandBinding_Save" Command="Save" CanExecute="commandBinding_Save_CanExecute" Executed="commandBinding_Save_Executed"/>
     </Window.CommandBindings>
     <Grid>
@@ -21,7 +22,8 @@
         <Menu>
             <MenuItem Header="File">
                 <MenuItem Command="New"/>
-                <MenuItem Command="Save"/>
+                <MenuItem Command="Open"/>
+                <MenuItem Command="Save"/>                
             </MenuItem>
         </Menu>
         <ToolBar Grid.Row="1">
@@ -31,6 +33,17 @@
                         <Path Fill="#FF000000">
                             <Path.Data>
                                 <PathGeometry Figures="M 4 1 H 28 L 40 13 V 43 H 4 Z M 8 5 V 39 H 36 V 18 H 23 V 5 Z m 19 0 v 9 h 9 z"/>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
+                </Viewbox>
+            </Button>
+            <Button Command="Open" ToolTip="Open Level">
+                <Viewbox Name="vOpenProject" Width="24" Height="24" Stretch="Uniform">
+                    <Canvas Width="47" Height="47">
+                        <Path Fill="#FF000000">
+                            <Path.Data>
+                                <PathGeometry Figures="m 10 37 v -3 h 7 v 3 z m 0 -5 v -3 h 8 v 3 z m 0 -5 v -3 h 10 v 3 z M 4 1 H 27.25 L 40 13.75 V 24.6636 C 38.8303 23.6519 37.4784 22.8454 36 22.2999 V 18 H 23 V 5 H 8 v 34 h 11.2999 c 0.5455 1.4784 1.352 2.8303 2.3637 4 H 4 Z M 27 6.25 V 14 h 7.75 z M 31.5 23 c 1.6764 0 3.269 0.3587 4.7053 1.0036 L 31.5 34.5 42.752 36.8868 C 41.6532 42.0926 37.0329 46 31.5 46 25.1487 46 20 40.8513 20 34.5 20 28.1487 25.1487 23 31.5 23 Z"/>
                             </Path.Data>
                         </Path>
                     </Canvas>
