@@ -31,6 +31,7 @@ namespace LogicPictureLE
             ColorData colorDataMarker = new ColorData(0xFF, 0xA5, 0x00); //Orange = #FFFFA500
             List<ColorData> colorsDataTiles = new List<ColorData>();
             colorsDataTiles.Add(new ColorData(0x00, 0x00, 0x00)); //Black = #FF000000
+            colorsDataTiles.Add(new ColorData(0x00, 0x00, 0xFF)); //Blue = #FF0000FF
             List<TileData> tilesData = new List<TileData>();
             List<List<HintData>> hintsDataVertical = new List<List<HintData>>();
             List<List<HintData>> hintsDataHorizontal = new List<List<HintData>>();

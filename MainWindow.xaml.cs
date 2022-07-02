@@ -86,12 +86,14 @@ namespace LogicPictureLE
                 try
                 {
                     string contenJSON = File.ReadAllText(openFileDialog.FileName);
-                    SingleLevel singleLevel = JsonConvert.DeserializeObject<SingleLevel>(contenJSON);
+                    singleLevel = JsonConvert.DeserializeObject<SingleLevel>(contenJSON);
+                    grid_MainContent.Children.Clear();
+                    singleLevelEditor = new SingleLevelEditor(singleLevel);
+                    grid_MainContent.Children.Add(singleLevelEditor);
                 }
-                catch (Exception)
+                catch (ArgumentException exeption)
                 {
-
-                    throw;
+                    MessageBox.Show("Messege of error:\n" + exeption.Message, "Error during open file", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

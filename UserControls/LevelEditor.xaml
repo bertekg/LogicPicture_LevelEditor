@@ -73,7 +73,24 @@
         <Grid Grid.Column="4">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <Grid>
-                    <TextBlock Text="Used Colors and Selection Mode TODO" TextWrapping="Wrap"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Used Colors">
+                        <StackPanel>
+                            <StackPanel Name="stackPanel_UsedColors">
+                                <local:UsedColorControl/>
+                            </StackPanel>
+                            <Button Name="button_AddNewColor" Click="button_AddNewColor_Click" Content="Add New Color" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Select Mode" Grid.Row="1">
+                        <StackPanel>
+                            <xctk:SingleUpDown Name="SingleUpDown_LeftMouse" Value="0"/>
+                            <xctk:SingleUpDown Name="SingleUpDown_RightMouse" Value="-1"/>
+                        </StackPanel>                        
+                    </GroupBox>
                 </Grid>
             </ScrollViewer>
            
