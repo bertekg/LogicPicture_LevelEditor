@@ -15,9 +15,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Newtonsoft.Json;
 using System.IO;
 using LogicPictureLE.UserControls;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace LogicPictureLE
 {
@@ -78,15 +79,30 @@ namespace LogicPictureLE
         private void commandBinding_Open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JSON|*.json";
+            openFileDialog.Filter = "XML|*.xml";
             openFileDialog.Title = "Save Level File";
             bool? openResult = openFileDialog.ShowDialog();
             if (openFileDialog.FileName != String.Empty && openResult.Value == true)
             {
                 try
                 {
-                    string contenJSON = File.ReadAllText(openFileDialog.FileName);
-                    singleLevel = JsonConvert.DeserializeObject<SingleLevel>(contenJSON);
+                    //string contenJSON = File.ReadAllText(openFileDialog.FileName);
+                    //singleLevel = JsonConvert.DeserializeObject<SingleLevel>(contenJSON);
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(openFileDialog.FileName);
+                    string xmlString = xmlDocument.OuterXml;
+                    using (StringReader read = new StringReader(xmlString))
+                    {
+                        Type outType = typeof(SingleLevel);
+
+                        XmlSerializer serializer = new XmlSerializer(outType);
+                        using (XmlReader reader = new XmlTextReader(read))
+                        {
+                            singleLevel = (SingleLevel)serializer.Deserialize(reader);
+                            reader.Close();
+                        }
+                        read.Close();
+                    }
                     grid_MainContent.Children.Clear();
                     singleLevelEditor = new SingleLevelEditor(singleLevel);
                     grid_MainContent.Children.Add(singleLevelEditor);
@@ -104,7 +120,7 @@ namespace LogicPictureLE
         private void commandBinding_Save_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "JSON|*.json";
+            saveFileDialog.Filter = "XML|*.xml";
             saveFileDialog.Title = "Save Level File";
             SingleLevel singleLevel = singleLevelEditor.GetSingleLevelData();
             string defaultFileName = singleLevel.NameEnglish + "_" +
@@ -115,9 +131,13 @@ namespace LogicPictureLE
 
             if (saveFileDialog.FileName != String.Empty && saveResult.Value == true)
             {
-                string jsonContent = JsonConvert.SerializeObject(singleLevel);
+                XmlSerializer ser = new XmlSerializer(typeof(SingleLevel));
+                TextWriter writer = new StreamWriter(saveFileDialog.FileName);
+                ser.Serialize(writer, singleLevel);
+                writer.Close();
+                //string jsonContent = JsonConvert.SerializeObject(singleLevel);
 
-                File.WriteAllText(saveFileDialog.FileName, jsonContent);
+                //File.WriteAllText(saveFileDialog.FileName, jsonContent);
                 MessageBox.Show("Save file finished correct. File path:\n" + saveFileDialog.FileName,
                     "Information after save project", MessageBoxButton.OK, MessageBoxImage.Information);
             }
