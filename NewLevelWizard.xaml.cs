@@ -26,20 +26,25 @@ namespace LogicPictureLE
         public SingleLevel singleLevel;
         private void button_EmptySingle_Click(object sender, RoutedEventArgs e)
         {
+            NewSingleLevelMake();
+            this.Close();
+        }
+        public void NewSingleLevelMake()
+        {
             ColorData colorDataNeutral = new ColorData(0xC0, 0xC0, 0xC0); //Silver = #FFC0C0C0
             ColorData colorDataBackground = new ColorData(0xFF, 0xFF, 0xFF); //White = #FFFFFFFF
             ColorData colorDataMarker = new ColorData(0xFF, 0xA5, 0x00); //Orange = #FFFFA500
             List<ColorData> colorsDataTiles = new List<ColorData>();
             colorsDataTiles.Add(new ColorData(0x00, 0x00, 0x00)); //Black = #FF000000
-            colorsDataTiles.Add(new ColorData(0x00, 0x00, 0xFF)); //Blue = #FF0000FF
+            //colorsDataTiles.Add(new ColorData(0x00, 0x00, 0xFF)); //Blue = #FF0000FF
             List<TileData> tilesData = new List<TileData>();
             List<List<HintData>> hintsDataVertical = new List<List<HintData>>();
             List<List<HintData>> hintsDataHorizontal = new List<List<HintData>>();
             Level level = new Level(5, 5, colorDataNeutral, colorDataBackground, colorDataMarker,
                 colorsDataTiles, tilesData, hintsDataHorizontal, hintsDataVertical);
             singleLevel = new SingleLevel("Empty Single Level", "Pusty pojedyńczy poziom", level);
-            this.Close();
         }
+
         private void button_EmptyBig_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Empty Big TODO");

@@ -81,6 +81,9 @@
       <DependentUpon>LevelEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="CommonClass\Level.cs" />
+    <Compile Include="UserControls\SelectionColorControl.xaml.cs">
+      <DependentUpon>SelectionColorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\SingleLevelEditor.xaml.cs">
       <DependentUpon>SingleLevelEditor.xaml</DependentUpon>
     </Compile>
@@ -104,6 +107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\LevelEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SelectionColorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

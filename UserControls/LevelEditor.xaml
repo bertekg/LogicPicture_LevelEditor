@@ -9,6 +9,7 @@
              d:DesignHeight="720" d:DesignWidth="1280">
     <UserControl.CommandBindings>
         <CommandBinding x:Name="commandBinding_Update" Command="ApplicationCommands.Replace" CanExecute="commandBinding_Update_CanExecute" Executed="commandBinding_Update_Executed"/>
+        <CommandBinding Command="local:CustomCommands.ClearAllTilesData" CanExecute="ClearAllTilesData_CanExecute"  Executed="ClearAllTilesData_Executed"/>
     </UserControl.CommandBindings>
     <Grid Name="gMainGrid">
         <Grid.ColumnDefinitions>
@@ -19,6 +20,13 @@
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <StackPanel>
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="Padding" Value="5"/>
+                </Style>
+            </StackPanel.Resources>
             <Grid>
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
@@ -46,7 +54,8 @@
                 <xctk:ByteUpDown Name="xctkByteUpDown_LevelHeight" Value="10" 
                              Grid.Row="1" Grid.Column="1"/>
             </Grid>
-            <Button Command="ApplicationCommands.Replace" Content="Upadte" Margin="5" Padding="5" HorizontalAlignment="Center"/>
+            <Button Command="ApplicationCommands.Replace" Content="Upadte" />
+            <Button Command="local:CustomCommands.ClearAllTilesData" Content="Clear All Tiles Data"/>
         </StackPanel>
         <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="5"/>
         <Rectangle Name="rectangle_Background" Grid.Column="2" Fill="White"/>
@@ -87,8 +96,18 @@
                     </GroupBox>
                     <GroupBox Header="Select Mode" Grid.Row="1">
                         <StackPanel>
-                            <xctk:SingleUpDown Name="SingleUpDown_LeftMouse" Value="0"/>
-                            <xctk:SingleUpDown Name="SingleUpDown_RightMouse" Value="-1"/>
+                            <WrapPanel Name="wrapPanel_ColorsForSelection">
+                                <local:SelectionColorControl/>
+                            </WrapPanel>
+                            <!--<xctk:SingleUpDown Name="SingleUpDown_LeftMouse" Value="0"/>
+                            <xctk:SingleUpDown Name="SingleUpDown_RightMouse" Value="-1"/>-->
+                            <Border Name="border_ClearTileDataMode" Tag="1" BorderBrush="Red" BorderThickness="5" HorizontalAlignment="Left"
+                                    MouseLeftButtonDown="border_ClearTileDataMode_MouseLeftButtonDown"
+                                    MouseRightButtonDown="border_ClearTileDataMode_MouseRightButtonDown">
+                                <Border BorderBrush="Black" BorderThickness="3">
+                                    <TextBlock Text="Clear TileData" VerticalAlignment="Center" Margin="5"/>
+                                </Border>
+                            </Border>
                         </StackPanel>                        
                     </GroupBox>
                 </Grid>

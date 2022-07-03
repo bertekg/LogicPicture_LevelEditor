@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:LogicPictureLE.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <TabControl>
+    <TabControl Name="tabControl_Main">
         <TabItem Header="Main data">
             <StackPanel>
                 <GroupBox Header="Names" HorizontalAlignment="Center">

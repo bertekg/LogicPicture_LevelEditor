@@ -31,6 +31,18 @@ namespace LogicPictureLE
         {
             SetCultureInfo("en-EN");
             InitializeComponent();
+            InitialNewSingleLevel();
+        }
+        private void InitialNewSingleLevel()
+        {
+            NewLevelWizard newLevelWizard = new NewLevelWizard();
+            newLevelWizard.NewSingleLevelMake();
+            singleLevel = newLevelWizard.singleLevel;
+            newLevelWizard.Close();
+            grid_MainContent.Children.Clear();
+            singleLevelEditor = new SingleLevelEditor(singleLevel);
+            singleLevelEditor.tabItem_LevelData.IsSelected = true;
+            grid_MainContent.Children.Add(singleLevelEditor);
         }
         SingleLevel singleLevel;
         SingleLevelEditor singleLevelEditor;
