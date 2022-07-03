@@ -77,6 +77,9 @@
     </Compile>
     <Compile Include="CommonClass\SingleLevel.cs" />
     <Compile Include="CommonClass\TileData.cs" />
+    <Compile Include="PreviewProject.xaml.cs">
+      <DependentUpon>PreviewProject.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\LevelEditor.xaml.cs">
       <DependentUpon>LevelEditor.xaml</DependentUpon>
     </Compile>
@@ -103,6 +106,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="NewLevelWizard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PreviewProject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

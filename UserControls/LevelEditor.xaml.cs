@@ -28,6 +28,9 @@ namespace LogicPictureLE.UserControls
             DrawAllLevelCells();
             DrawColorPickerOptionMode();
             UpdateEditMode();
+            cpBackgroundColor.SelectedColor = GetColorFromColorData(level.ColorDataBackground);
+            cpTilesNaturalColor.SelectedColor = GetColorFromColorData(level.ColorDataNeutral);
+            cpMarkerColor.SelectedColor = GetColorFromColorData(level.ColorDataMarker);
         }
         private void InitialEditMode()
         {
@@ -381,6 +384,32 @@ namespace LogicPictureLE.UserControls
                 }
             }                    
         }
+        private void CpTilesNaturalColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (level == null) return;
+            if (cpTilesNaturalColor.SelectedColor.HasValue)
+            {
+                level.ColorDataNeutral = GetColorDataFromColor(cpTilesNaturalColor.SelectedColor.Value);
+                DrawAllLevelCells();
+            }
+        }
+        private void CpBackgroundColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (level == null) return;
+            if (cpBackgroundColor.SelectedColor.HasValue)
+            {
+                level.ColorDataBackground = GetColorDataFromColor(cpBackgroundColor.SelectedColor.Value);
+                rectangle_Background.Fill = new SolidColorBrush(GetColorFromColorData(level.ColorDataBackground));
+            }
+        }
+        private void CpMarkerColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (level == null) return;
+            if (cpMarkerColor.SelectedColor.HasValue)
+            {
+                level.ColorDataMarker = GetColorDataFromColor(cpMarkerColor.SelectedColor.Value);
+            }
+        }
         private void ClearAllTilesData_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want delete all Tiles Data?",
@@ -396,10 +425,17 @@ namespace LogicPictureLE.UserControls
     {
         public static readonly RoutedUICommand ClearAllTilesData = new RoutedUICommand
             ("Clear All Tiles Data", "ClearAllTilesData", typeof(CustomCommands),
-                new InputGestureCollection()
-                {
-                    new KeyGesture(Key.C, ModifierKeys.Alt)
-                }
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.C, ModifierKeys.Alt)
+            }
+            );
+        public static readonly RoutedUICommand UpdateLevelDimension = new RoutedUICommand
+            ("Upadte Level Dimension", "UpdateLevelDimension", typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.U, ModifierKeys.Alt)
+            }
             );
     }
 }

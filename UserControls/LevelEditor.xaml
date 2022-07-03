@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1280">
     <UserControl.CommandBindings>
-        <CommandBinding x:Name="commandBinding_Update" Command="ApplicationCommands.Replace" CanExecute="commandBinding_Update_CanExecute" Executed="commandBinding_Update_Executed"/>
+        <CommandBinding Command="local:CustomCommands.UpdateLevelDimension" CanExecute="commandBinding_Update_CanExecute" Executed="commandBinding_Update_Executed"/>
         <CommandBinding Command="local:CustomCommands.ClearAllTilesData" CanExecute="ClearAllTilesData_CanExecute"  Executed="ClearAllTilesData_Executed"/>
     </UserControl.CommandBindings>
     <Grid Name="gMainGrid">
@@ -27,34 +27,61 @@
                     <Setter Property="Padding" Value="5"/>
                 </Style>
             </StackPanel.Resources>
-            <Grid>
-                <Grid.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="HorizontalAlignment" Value="Right"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                    </Style>
-                    <Style TargetType="xctk:ByteUpDown">
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="Margin" Value="5"/>
-                        <Setter Property="Minimum" Value="1"/>
-                    </Style>
-                </Grid.Resources>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="Level width" Grid.Row="0" Grid.Column="0"/>
-                <xctk:ByteUpDown Name="xctkByteUpDown_LevelWidth" Value="5" 
+            <GroupBox Header="Level dimension">
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                        <Style TargetType="xctk:ByteUpDown">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="5"/>
+                            <Setter Property="Minimum" Value="1"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Width (X)" Grid.Row="0" Grid.Column="0"/>
+                    <xctk:ByteUpDown Name="xctkByteUpDown_LevelWidth" Value="5" 
                              Grid.Row="0" Grid.Column="1"/>
-                <TextBlock Text="Level height" Grid.Row="1" Grid.Column="0"/>
-                <xctk:ByteUpDown Name="xctkByteUpDown_LevelHeight" Value="10" 
+                    <TextBlock Text="Height (Y)" Grid.Row="1" Grid.Column="0"/>
+                    <xctk:ByteUpDown Name="xctkByteUpDown_LevelHeight" Value="10" 
                              Grid.Row="1" Grid.Column="1"/>
-            </Grid>
-            <Button Command="ApplicationCommands.Replace" Content="Upadte" />
+                </Grid>
+            </GroupBox>
+            <Button Command="local:CustomCommands.UpdateLevelDimension" Content="Upadte"/>
+            <GroupBox Header="Basic colors">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Tiles Natural Color" Grid.Row="0"/>
+                    <xctk:ColorPicker Name="cpTilesNaturalColor" Grid.Row="0" SelectedColor="Black" 
+                                      DisplayColorAndName="True" Grid.Column="1" VerticalAlignment="Center"
+                                      SelectedColorChanged="CpTilesNaturalColor_SelectedColorChanged"/>
+                    <Label Content="Background Color" Grid.Row="1"/>
+                    <xctk:ColorPicker Name="cpBackgroundColor" Grid.Row="1" SelectedColor="BlanchedAlmond"
+                                      DisplayColorAndName="True" Grid.Column="1" VerticalAlignment="Center"
+                                      SelectedColorChanged="CpBackgroundColor_SelectedColorChanged"/>
+                    <Label Content="Marker Color" Grid.Row="2"/>
+                    <xctk:ColorPicker Name="cpMarkerColor" Grid.Row="2" SelectedColor="OrangeRed"
+                                      DisplayColorAndName="True" Grid.Column="1" VerticalAlignment="Center"
+                                      SelectedColorChanged="CpMarkerColor_SelectedColorChanged"/>
+                </Grid>
+            </GroupBox>
             <Button Command="local:CustomCommands.ClearAllTilesData" Content="Clear All Tiles Data"/>
         </StackPanel>
         <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="5"/>
