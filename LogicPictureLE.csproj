@@ -72,6 +72,7 @@
     </ApplicationDefinition>
     <Compile Include="CommonClass\ColorData.cs" />
     <Compile Include="CommonClass\HintData.cs" />
+    <Compile Include="LevelEditorClass\ProjectStory.cs" />
     <Compile Include="NewLevelWizard.xaml.cs">
       <DependentUpon>NewLevelWizard.xaml</DependentUpon>
     </Compile>

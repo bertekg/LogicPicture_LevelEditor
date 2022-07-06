@@ -9,16 +9,14 @@
     <TabControl Name="tabControl_Main">
         <TabItem Header="Main data">
             <StackPanel>
-                <GroupBox Header="Names" HorizontalAlignment="Center">
+                <GroupBox Header="Stories for the project" HorizontalAlignment="Stretch">
                     <Grid>
                         <Grid.Resources>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
                             </Style>
                             <Style TargetType="TextBox">
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="5"/>
                             </Style>
                         </Grid.Resources>
                         <Grid.ColumnDefinitions>
@@ -29,12 +27,40 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Level name (English)" Grid.Row="0" Grid.Column="0"/>
-                        <TextBox Name="textBox_LevelNameEnglish" Text="SampleNameEN" 
-                                 Grid.Row="0" Grid.Column="1"/>
-                        <TextBlock Text="Level name (English)" Grid.Row="1" Grid.Column="0"/>
-                        <TextBox Name="textBox_LevelNamePolish" Text="SampleNamePL"
-                                 Grid.Row="1" Grid.Column="1"/>
+                        <GroupBox Header="English" Grid.Column="0">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0"/>
+                                    <TextBox Name="textBox_ProjectTitleEnglish" Text="SampleNameEN" 
+                                 Grid.Row="0" Grid.Column="1" Margin="5"/>
+                                </Grid>
+                                <TextBlock Text="Description:" Grid.Row="0" Grid.Column="0"/>
+                                <TextBox Name="textBox_ProjectDescriptionEnglish" TextWrapping="Wrap"
+                                         VerticalScrollBarVisibility="Auto" AcceptsReturn="True"
+                                         SpellCheck.IsEnabled="True" Language="en-US"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Polish" Grid.Column="1">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Title:" Grid.Row="1" Grid.Column="0"/>
+                                    <TextBox Name="textBox_ProjectTitlePolish" Text="SampleNamePL"
+                                             Grid.Row="1" Grid.Column="1" Margin="5"/>
+                                </Grid>
+                                <TextBlock Text="Description:" Grid.Row="0" Grid.Column="0"/>
+                                <TextBox Name="textBox_ProjectDescriptionPolish" TextWrapping="Wrap"
+                                         VerticalScrollBarVisibility="Auto" AcceptsReturn="True"
+                                         SpellCheck.IsEnabled="True" Language="pl-PL"/>
+                            </StackPanel>
+                        </GroupBox>
                     </Grid>
                 </GroupBox>                
             </StackPanel>

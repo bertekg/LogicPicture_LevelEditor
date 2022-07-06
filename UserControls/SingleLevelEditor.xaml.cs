@@ -30,22 +30,26 @@ namespace LogicPictureLE.UserControls
         }
         private void LoadLevelData()
         {
-            textBox_LevelNameEnglish.Text = singleLevel.NameEnglish;
-            textBox_LevelNamePolish.Text = singleLevel.NamePolish;
+            textBox_ProjectTitleEnglish.Text = singleLevel.ProjectStoryEN.Title;
+            textBox_ProjectDescriptionEnglish.Text = singleLevel.ProjectStoryEN.Description;
+            textBox_ProjectTitlePolish.Text = singleLevel.ProjectStoryPL.Title;
+            textBox_ProjectDescriptionPolish.Text = singleLevel.ProjectStoryPL.Description;
 
             levelEditor = new LevelEditor(singleLevel.LevelData);
             tabItem_LevelData.Content = levelEditor;
         }
         public SingleLevel GetSingleLevelData()
         {
-            UpadateLevelNames();
+            UpadateProjectStories();
             singleLevel.LevelData = levelEditor.GetLevelData();
             return singleLevel;
         }
-        public void UpadateLevelNames()
+        public void UpadateProjectStories()
         {
-            singleLevel.NameEnglish = textBox_LevelNameEnglish.Text;
-            singleLevel.NamePolish = textBox_LevelNamePolish.Text;
+            singleLevel.ProjectStoryEN.Title = textBox_ProjectTitleEnglish.Text;
+            singleLevel.ProjectStoryEN.Description = textBox_ProjectDescriptionEnglish.Text;
+            singleLevel.ProjectStoryPL.Title = textBox_ProjectTitlePolish.Text;
+            singleLevel.ProjectStoryPL.Description = textBox_ProjectDescriptionPolish.Text;
         }
     }
 }

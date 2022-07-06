@@ -1,14 +1,14 @@
 ﻿[System.Serializable]
 public class SingleLevel
 {
-    public string NameEnglish { get; set; }
-    public string NamePolish { get; set; }
+    public ProjectStory ProjectStoryEN { get; set; }
+    public ProjectStory ProjectStoryPL { get; set; }
     public Level LevelData { get; set; }
     public SingleLevel() { }
-    public SingleLevel(string nameEnglish, string namePolish, Level levelData)
+    public SingleLevel(ProjectStory projectStoryEN, ProjectStory projectStoryPL, Level levelData)
     {
-        NameEnglish = nameEnglish;
-        NamePolish = namePolish;
+        ProjectStoryEN = projectStoryEN;
+        ProjectStoryPL = projectStoryPL;
         LevelData = levelData;
     }
 }

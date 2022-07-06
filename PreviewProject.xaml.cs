@@ -76,13 +76,13 @@ namespace LogicPictureLE
             {
                 case Lang.EN:
                     textBlock_FinalCongratulation.Text = "Level Finished!!!";
-                    tbFinish_NameLevel.Text = singleLevel.NameEnglish + " [" + singleLevel.LevelData.WidthX.ToString() +
+                    tbFinish_NameLevel.Text = singleLevel.ProjectStoryEN.Title + " [" + singleLevel.LevelData.WidthX.ToString() +
                         "," + singleLevel.LevelData.HeightY.ToString() + "]";
                     button_FianlBacToMenu.Content = "Back To Menu";
                     break;
                 case Lang.PL:
                     textBlock_FinalCongratulation.Text = "Poziom ukończony!!!";
-                    tbFinish_NameLevel.Text = singleLevel.NamePolish + " [" + singleLevel.LevelData.WidthX.ToString() +
+                    tbFinish_NameLevel.Text = singleLevel.ProjectStoryPL.Title + " [" + singleLevel.LevelData.WidthX.ToString() +
                         "," + singleLevel.LevelData.HeightY.ToString() + "]";
                     button_FianlBacToMenu.Content = "Powrót do Menu";
                     break;

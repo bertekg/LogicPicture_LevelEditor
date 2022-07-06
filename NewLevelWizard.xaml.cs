@@ -42,7 +42,9 @@ namespace LogicPictureLE
             List<List<HintData>> hintsDataHorizontal = new List<List<HintData>>();
             Level level = new Level(5, 5, colorDataNeutral, colorDataBackground, colorDataMarker,
                 colorsDataTiles, tilesData, hintsDataHorizontal, hintsDataVertical);
-            singleLevel = new SingleLevel("Empty Single Level", "Pusty pojedyńczy poziom", level);
+            ProjectStory projectStoryEN = new ProjectStory("Empty Single Project", "Empty description of project");
+            ProjectStory projectStoryPL = new ProjectStory("Pusty pojedyńczy projekt", "Brak opisu projektu");
+            singleLevel = new SingleLevel(projectStoryEN, projectStoryPL, level);
         }
 
         private void button_EmptyBig_Click(object sender, RoutedEventArgs e)

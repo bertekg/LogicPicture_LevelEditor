@@ -136,7 +136,7 @@ namespace LogicPictureLE
             saveFileDialog.Filter = "XML|*.xml";
             saveFileDialog.Title = "Save Level File";
             SingleLevel singleLevel = singleLevelEditor.GetSingleLevelData();
-            string defaultFileName = singleLevel.NameEnglish + "_" +
+            string defaultFileName = singleLevel.ProjectStoryEN.Title + "_" +
                 singleLevel.LevelData.WidthX.ToString("D2") + "_" +
                 singleLevel.LevelData.HeightY.ToString("D2");
             saveFileDialog.FileName = defaultFileName;
