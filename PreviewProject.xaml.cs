@@ -431,7 +431,11 @@ namespace LogicPictureLE
         }
         private void UpadteFinalPicture()
         {
-            WriteableBitmap wbitmap = new WriteableBitmap(singleLevel.LevelData.WidthX, singleLevel.LevelData.HeightY, 96, 96, PixelFormats.Bgra32, null);
+            iFinal.Source = GetLevelPicture();
+        }
+        public WriteableBitmap GetLevelPicture()
+        {
+            WriteableBitmap writeableBitmap = new WriteableBitmap(singleLevel.LevelData.WidthX, singleLevel.LevelData.HeightY, 96, 96, PixelFormats.Bgra32, null);
             ///Place where this functioanlity is described: http://csharphelper.com/blog/2015/07/set-the-pixels-in-a-wpf-bitmap-in-c/
             byte[] pixels1d = new byte[singleLevel.LevelData.HeightY * singleLevel.LevelData.WidthX * 4];
             int index = 0;
@@ -440,7 +444,7 @@ namespace LogicPictureLE
                 for (int y = 0; y < singleLevel.LevelData.WidthX; y++)
                 {
                     TileData tileDataFound = singleLevel.LevelData.TilesData.Find(item => (item.PosX == y && item.PosY == singleLevel.LevelData.HeightY - x - 1));
-                    if(tileDataFound != null)
+                    if (tileDataFound != null)
                     {
                         byte byteResult = tileDataFound.ColorID;
                         pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Blue;
@@ -458,9 +462,10 @@ namespace LogicPictureLE
             }
             Int32Rect rect = new Int32Rect(0, 0, singleLevel.LevelData.WidthX, singleLevel.LevelData.HeightY);
             int stride = 4 * singleLevel.LevelData.WidthX;
-            wbitmap.WritePixels(rect, pixels1d, stride, 0);
-            iFinal.Source = wbitmap;
+            writeableBitmap.WritePixels(rect, pixels1d, stride, 0);
+            return writeableBitmap;
         }
+
         private Color GetColorFromColorData(ColorData colorData)
         {
             return Color.FromRgb(colorData.Red, colorData.Green, colorData.Blue);

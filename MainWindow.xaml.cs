@@ -2,19 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.IO;
 using LogicPictureLE.UserControls;
 using System.Xml.Serialization;
@@ -136,23 +127,61 @@ namespace LogicPictureLE
             saveFileDialog.Filter = "XML|*.xml";
             saveFileDialog.Title = "Save Level File";
             SingleLevel singleLevel = singleLevelEditor.GetSingleLevelData();
-            string defaultFileName = singleLevel.ProjectStoryEN.Title + "_" +
-                singleLevel.LevelData.WidthX.ToString("D2") + "_" +
-                singleLevel.LevelData.HeightY.ToString("D2");
+            string defaultFileName = string.Concat("S_", singleLevel.ProjectStoryEN.Title, "_", 
+                singleLevel.LevelData.WidthX.ToString("D2"), "_", singleLevel.LevelData.HeightY.ToString("D2"));
             saveFileDialog.FileName = defaultFileName;
             bool? saveResult = saveFileDialog.ShowDialog();
 
             if (saveFileDialog.FileName != String.Empty && saveResult.Value == true)
             {
-                XmlSerializer ser = new XmlSerializer(typeof(SingleLevel));
-                TextWriter writer = new StreamWriter(saveFileDialog.FileName);
-                ser.Serialize(writer, singleLevel);
-                writer.Close();
-                //string jsonContent = JsonConvert.SerializeObject(singleLevel);
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(SingleLevel));
+                TextWriter textWriter = new StreamWriter(saveFileDialog.FileName);
+                xmlSerializer.Serialize(textWriter, singleLevel);
+                textWriter.Close();
 
-                //File.WriteAllText(saveFileDialog.FileName, jsonContent);
-                MessageBox.Show("Save file finished correct. File path:\n" + saveFileDialog.FileName,
-                    "Information after save project", MessageBoxButton.OK, MessageBoxImage.Information);
+                string rootDirectoryPath = Path.GetDirectoryName(saveFileDialog.FileName);
+                string directoryName = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
+                string finalDirectoryPath = Path.Combine(rootDirectoryPath, directoryName);
+                if (Directory.Exists(finalDirectoryPath))
+                {
+                    Directory.Delete(finalDirectoryPath, true);
+                }
+                DirectoryInfo directoryInfo = Directory.CreateDirectory(finalDirectoryPath);
+
+                xmlSerializer = new XmlSerializer(typeof(ProjectCommon));
+                ProjectCommon projectCommon = new ProjectCommon(singleLevel.ProjectStoryEN, singleLevel.ProjectStoryPL);
+                string projectCommonPath = Path.Combine(directoryInfo.FullName , string.Concat(defaultFileName, "_ProjectCommon.xml"));
+                textWriter = new StreamWriter(projectCommonPath);
+                xmlSerializer.Serialize(textWriter, projectCommon);
+                textWriter.Close();
+
+                xmlSerializer = new XmlSerializer(typeof(Level));
+                string levelPath = Path.Combine(directoryInfo.FullName, string.Concat(defaultFileName, "_Level.xml"));
+                textWriter = new StreamWriter(levelPath);
+                xmlSerializer.Serialize(textWriter, singleLevel.LevelData);
+                textWriter.Close();
+
+                string levelPicturePath = Path.Combine(directoryInfo.FullName, string.Concat(defaultFileName, "_Picture.png"));
+                PreviewProject previewProject = new PreviewProject(singleLevel);
+                WriteableBitmap writeableBitmap = previewProject.GetLevelPicture();
+                CreateThumbnail(levelPicturePath, writeableBitmap);
+                previewProject.Close();
+
+                string messageBoxText = "Save project finished correct.\nFile/directory name: " + defaultFileName +
+                    "\nRoot path:\n" + rootDirectoryPath;
+                MessageBox.Show(messageBoxText, "Information after save project", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+        void CreateThumbnail(string filename, BitmapSource image5)
+        {
+            if (filename != string.Empty)
+            {
+                using (FileStream stream5 = new FileStream(filename, FileMode.Create))
+                {
+                    PngBitmapEncoder encoder5 = new PngBitmapEncoder();
+                    encoder5.Frames.Add(BitmapFrame.Create(image5));
+                    encoder5.Save(stream5);
+                }
             }
         }
         private void button_PreviewProject_Click(object sender, RoutedEventArgs e)

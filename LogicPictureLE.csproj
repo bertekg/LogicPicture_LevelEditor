@@ -72,11 +72,12 @@
     </ApplicationDefinition>
     <Compile Include="CommonClass\ColorData.cs" />
     <Compile Include="CommonClass\HintData.cs" />
+    <Compile Include="CommonClass\ProjectCommon.cs" />
     <Compile Include="LevelEditorClass\ProjectStory.cs" />
     <Compile Include="NewLevelWizard.xaml.cs">
       <DependentUpon>NewLevelWizard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CommonClass\SingleLevel.cs" />
+    <Compile Include="LevelEditorClass\SingleLevel.cs" />
     <Compile Include="CommonClass\TileData.cs" />
     <Compile Include="PreviewProject.xaml.cs">
       <DependentUpon>PreviewProject.xaml</DependentUpon>
