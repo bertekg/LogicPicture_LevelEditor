@@ -172,6 +172,14 @@ namespace LogicPictureLE
                 MessageBox.Show(messageBoxText, "Information after save project", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+        private void commandBinding_AboutProgram_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        private void commandBinding_AboutProgram_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Logic Picture - Level Editor\nVersion 0.1", "About Program");
+        }
         void CreateThumbnail(string filename, BitmapSource image5)
         {
             if (filename != string.Empty)
@@ -306,5 +314,15 @@ namespace LogicPictureLE
                 singleLevel.LevelData.HintsDataHorizontal.Add(lHorizontalNumberHints);
             }
         }
+    }
+    public static class CustomCommands
+    {
+        public static readonly RoutedUICommand AboutProgram = new RoutedUICommand
+            ("About Program", "About Program", typeof(CustomCommands),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.F1, ModifierKeys.Alt)
+                }
+            );
     }
 }
