@@ -11,6 +11,7 @@
         <CommandBinding x:Name="commandBinding_New" Command="New" CanExecute="commandBinding_New_CanExecute" Executed="commandBinding_New_Executed"/>
         <CommandBinding x:Name="commandBinding_Open" Command="Open" CanExecute="commandBinding_Open_CanExecute" Executed="commandBinding_Open_Executed"/>
         <CommandBinding x:Name="commandBinding_Save" Command="Save" CanExecute="commandBinding_Save_CanExecute" Executed="commandBinding_Save_Executed"/>
+        <CommandBinding x:Name="commandBinding_AboutProgram" Command="local:CustomCommands.AboutProgram" CanExecute="commandBinding_AboutProgram_CanExecute" Executed="commandBinding_AboutProgram_Executed"/>
     </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -24,6 +25,9 @@
                 <MenuItem Command="New"/>
                 <MenuItem Command="Open"/>
                 <MenuItem Command="Save"/>                
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Command="local:CustomCommands.AboutProgram"/>
             </MenuItem>
         </Menu>
         <ToolBar Grid.Row="1">
