@@ -178,7 +178,8 @@ namespace LogicPictureLE
         }
         private void commandBinding_AboutProgram_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Logic Picture - Level Editor\nVersion 0.1", "About Program");
+            AboutProgram apWindow = new AboutProgram();
+            apWindow.ShowDialog();
         }
         void CreateThumbnail(string filename, BitmapSource image5)
         {

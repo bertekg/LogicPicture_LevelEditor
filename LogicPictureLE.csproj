@@ -70,6 +70,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutProgram.xaml.cs">
+      <DependentUpon>AboutProgram.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CommonClass\ColorData.cs" />
     <Compile Include="CommonClass\HintData.cs" />
     <Compile Include="CommonClass\ProjectCommon.cs" />
@@ -95,6 +98,10 @@
     <Compile Include="UserControls\UsedColorControl.xaml.cs">
       <DependentUpon>UsedColorControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="AboutProgram.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
