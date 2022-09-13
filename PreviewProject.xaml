@@ -22,7 +22,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <GroupBox Header="Level Dimention">
+                    <GroupBox Header="Level Dimension">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -63,7 +63,7 @@
                             <TextBox Name="tbLevelFilledViewCellsCount" Text="5" Grid.Row="1" Grid.Column="1" IsReadOnly="True" VerticalAlignment="Center" Margin="5"/>
                             <TextBlock Text="All filled cells outside view" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             <TextBox Name="tbLevelFilledOutsideViewCellsCount" Text="1" Grid.Row="2" Grid.Column="1" IsReadOnly="True" VerticalAlignment="Center" Margin="5"/>
-                            <TextBlock Text="Procent of filled cells in view" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            <TextBlock Text="Percent of filled cells in view" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             <TextBox Name="tbLevelFilledViewInPrecent" Text="20%" Grid.Row="3" Grid.Column="1" IsReadOnly="True" VerticalAlignment="Center" Margin="5"/>
                         </Grid>
                     </GroupBox>
@@ -83,7 +83,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="Cells color count" Width="Auto" DisplayMemberBinding="{Binding countOfCol}" />
-                                <GridViewColumn Header="Procent to all filled cells" Width="Auto" DisplayMemberBinding="{Binding procToAll}" />
+                                <GridViewColumn Header="Percent to all filled cells" Width="Auto" DisplayMemberBinding="{Binding procToAll}" />
                             </GridView>
                         </ListView.View>
                     </ListView>
