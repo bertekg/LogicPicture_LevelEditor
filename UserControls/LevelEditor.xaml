@@ -56,7 +56,7 @@
                              Grid.Row="1" Grid.Column="1"/>
                 </Grid>
             </GroupBox>
-            <Button Command="local:CustomCommands.UpdateLevelDimension" Content="Upadte"/>
+            <Button Command="local:CustomCommands.UpdateLevelDimension" Content="Update"/>
             <GroupBox Header="Basic colors">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -126,8 +126,6 @@
                             <WrapPanel Name="wrapPanel_ColorsForSelection">
                                 <local:SelectionColorControl/>
                             </WrapPanel>
-                            <!--<xctk:SingleUpDown Name="SingleUpDown_LeftMouse" Value="0"/>
-                            <xctk:SingleUpDown Name="SingleUpDown_RightMouse" Value="-1"/>-->
                             <Border Name="border_ClearTileDataMode" Tag="1" BorderBrush="Red" BorderThickness="5" HorizontalAlignment="Left"
                                     MouseLeftButtonDown="border_ClearTileDataMode_MouseLeftButtonDown"
                                     MouseRightButtonDown="border_ClearTileDataMode_MouseRightButtonDown">
@@ -138,8 +136,7 @@
                         </StackPanel>                        
                     </GroupBox>
                 </Grid>
-            </ScrollViewer>
-           
+            </ScrollViewer>           
         </Grid>
     </Grid>
 </UserControl>

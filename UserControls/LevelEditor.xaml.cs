@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace LogicPictureLE.UserControls
@@ -162,7 +156,7 @@ namespace LogicPictureLE.UserControls
             }
             else
             {
-                MessageBox.Show("You cannot change to same mode like left mous");
+                MessageBox.Show("You cannot change to same mode like left mouse");
             }            
         }
         private void SelectionColorControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -179,7 +173,7 @@ namespace LogicPictureLE.UserControls
             }
             else
             {
-                MessageBox.Show("You cannot change to same mode like left mous");
+                MessageBox.Show("You cannot change to same mode like right mouse");
             }
         }
         private void border_ClearTileDataMode_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -195,7 +189,7 @@ namespace LogicPictureLE.UserControls
             }
             else
             {
-                MessageBox.Show("You cannot change to same mode like left mous");
+                MessageBox.Show("You cannot change to same mode like left mouse");
             }
         }
         private void border_ClearTileDataMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -211,7 +205,7 @@ namespace LogicPictureLE.UserControls
             }
             else
             {
-                MessageBox.Show("You cannot change to same mode like left mous");
+                MessageBox.Show("You cannot change to same mode like right mouse");
             }
         }
         private void colorPicker_Color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
@@ -241,7 +235,7 @@ namespace LogicPictureLE.UserControls
                 {
                     MessageBoxResult messageBoxResult = MessageBox.Show("For color to delete some Tiles use it.\n" +
                         "When you delete color all connected tiles will be deleted too.\n" +
-                        "Are you sure you want delet this color?",
+                        "Are you sure you want delete this color?",
                         "Confirmation for delete color", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (messageBoxResult != MessageBoxResult.Yes)
                     {
@@ -413,7 +407,7 @@ namespace LogicPictureLE.UserControls
         private void ClearAllTilesData_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want delete all Tiles Data?",
-                "Confirmation befere delete all tiles data", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                "Confirmation before delete all tiles data", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
                 level.TilesData.Clear();
@@ -431,7 +425,7 @@ namespace LogicPictureLE.UserControls
             }
             );
         public static readonly RoutedUICommand UpdateLevelDimension = new RoutedUICommand
-            ("Upadte Level Dimension", "UpdateLevelDimension", typeof(CustomCommands),
+            ("Update Level Dimension", "UpdateLevelDimension", typeof(CustomCommands),
             new InputGestureCollection()
             {
                 new KeyGesture(Key.U, ModifierKeys.Alt)

@@ -27,7 +27,7 @@ namespace LogicPictureLE
         {
             InitializeComponent();
             singleLevel = new SingleLevel();
-            Window_PrevieProject.Title = "Preview Project - Defalut";
+            Window_PrevieProject.Title = "Preview Project - Default";
         }
         public PreviewProject(SingleLevel level)
         {
