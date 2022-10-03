@@ -52,7 +52,7 @@ namespace LogicPictureLE
             if (singleLevel != null)
             {
                 MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure you want create new project and clear all current project data?",
-                "Question befor creation new file", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                "Question before creation new file", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (messageBoxResult == MessageBoxResult.Yes)
                 {
                     CreateNewLevel();
@@ -112,7 +112,7 @@ namespace LogicPictureLE
                 }
                 catch (ArgumentException exeption)
                 {
-                    MessageBox.Show("Messege of error:\n" + exeption.Message, "Error during open file", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Message of error:\n" + exeption.Message, "Error during open file", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

@@ -42,7 +42,7 @@ namespace LogicPictureLE
             List<List<HintData>> hintsDataHorizontal = new List<List<HintData>>();
             Level level = new Level(5, 5, colorDataNeutral, colorDataBackground, colorDataMarker,
                 colorsDataTiles, tilesData, hintsDataHorizontal, hintsDataVertical);
-            ProjectStory projectStoryEN = new ProjectStory("Empty Single Project", "Empty description of project.\nSecound line of description.");
+            ProjectStory projectStoryEN = new ProjectStory("Empty Single Project", "Empty description of project.\nSecond line of description.");
             ProjectStory projectStoryPL = new ProjectStory("Pusty pojedyńczy projekt", "Brak opisu projektu.\nDruga linia opisu.");
             singleLevel = new SingleLevel(projectStoryEN, projectStoryPL, level);
         }

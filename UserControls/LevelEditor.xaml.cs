@@ -259,7 +259,7 @@ namespace LogicPictureLE.UserControls
             }
             else
             {
-                MessageBox.Show("You cannot delete all possible colors. Minimum on color for selection must exist.", "Limitiation for deleteing color",
+                MessageBox.Show("You cannot delete all possible colors. Minimum on color for selection must exist.", "Limitation for deleting color",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }

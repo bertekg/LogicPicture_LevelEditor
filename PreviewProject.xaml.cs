@@ -436,7 +436,7 @@ namespace LogicPictureLE
         public WriteableBitmap GetLevelPicture()
         {
             WriteableBitmap writeableBitmap = new WriteableBitmap(singleLevel.LevelData.WidthX, singleLevel.LevelData.HeightY, 96, 96, PixelFormats.Bgra32, null);
-            ///Place where this functioanlity is described: http://csharphelper.com/blog/2015/07/set-the-pixels-in-a-wpf-bitmap-in-c/
+            ///Place where this functionality is described: http://csharphelper.com/blog/2015/07/set-the-pixels-in-a-wpf-bitmap-in-c/
             byte[] pixels1d = new byte[singleLevel.LevelData.HeightY * singleLevel.LevelData.WidthX * 4];
             int index = 0;
             for (int x = 0; x < singleLevel.LevelData.HeightY; x++)
