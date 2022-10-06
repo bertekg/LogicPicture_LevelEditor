@@ -28,7 +28,7 @@ namespace LogicPictureLE
             System.IO.FileInfo fileInfo = new System.IO.FileInfo(assembly.Location);
             DateTime lastModified = fileInfo.LastWriteTime;
             tbVersionNo.Text = "Version number: " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            tbReleaseDate.Text = "Release Date: " + lastModified.Date.ToString("dd/MM/yyyy");
+            tbReleaseDate.Text = "Release Date: " + lastModified.Date.ToString("yyyy.MM.dd");
             tbCopyright.Text = fvi.LegalCopyright;
         }
 

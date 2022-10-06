@@ -5,12 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:LogicPictureLE"
+        xmlns:icons ="clr-namespace:LogicPictureLE.IconsXMAL"
         mc:Ignorable="d"
-        Title="Logic Picture - PC Level Editor" Height="450" Width="800">
+        Title="Logic Picture - PC Level Editor" Width="1280" Height="720" >
     <Window.CommandBindings>
         <CommandBinding x:Name="commandBinding_New" Command="New" CanExecute="commandBinding_New_CanExecute" Executed="commandBinding_New_Executed"/>
         <CommandBinding x:Name="commandBinding_Open" Command="Open" CanExecute="commandBinding_Open_CanExecute" Executed="commandBinding_Open_Executed"/>
         <CommandBinding x:Name="commandBinding_Save" Command="Save" CanExecute="commandBinding_Save_CanExecute" Executed="commandBinding_Save_Executed"/>
+        <CommandBinding x:Name="commandBinding_Exit" Command="local:CustomCommands.Exit" CanExecute="commandBinding_Exit_CanExecute" Executed="commandBinding_Exit_Executed"/>
+        <CommandBinding x:Name="commanfBinding_PreviewProject" Command="local:CustomCommands.PreviewProject" CanExecute="commanfBinding_PreviewProject_CanExecute" Executed="commanfBinding_PreviewProject_Executed"/>
         <CommandBinding x:Name="commandBinding_AboutProgram" Command="local:CustomCommands.AboutProgram" CanExecute="commandBinding_AboutProgram_CanExecute" Executed="commandBinding_AboutProgram_Executed"/>
     </Window.CommandBindings>
     <Grid>
@@ -22,54 +25,89 @@
         </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="File">
-                <MenuItem Command="New"/>
-                <MenuItem Command="Open"/>
-                <MenuItem Command="Save"/>                
+                <MenuItem Command="New">
+                    <MenuItem.Icon>
+                        <Viewbox Stretch="Uniform" Width="16" Height="16">
+                            <icons:NewIcon/>
+                        </Viewbox>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="Open">
+                    <MenuItem.Icon>
+                        <Viewbox Stretch="Uniform" Width="16" Height="16">
+                            <icons:OpenIcon/>
+                        </Viewbox>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Command="Save">
+                    <MenuItem.Icon>
+                        <Viewbox Stretch="Uniform" Width="16" Height="16">
+                            <icons:SaveIcon/>
+                        </Viewbox>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Command="local:CustomCommands.Exit">
+                    <MenuItem.Icon>
+                        <Viewbox Stretch="Uniform" Width="16" Height="16">
+                            <Canvas Width="40" Height="40">
+                                <Path Fill="#FF000000">
+                                    <Path.Data>
+                                        <PathGeometry Figures="m 19 1 c 1.1046 0 2 0.8954 2 2 0 0.8215 -0.7453 1.5274 -1.4536 1.8352 l 0.537 5.1653 c 3.8275 0.0447 6.9165 3.1614 6.9165 6.9995 L 27 20 h -1.0001 c 2.2092 0 4 1.7909 4 4 v 2 c 0 2.2091 -1.7907 3.9999 -3.9997 4 H 27 v 7.6003 C 25.1755 38.4503 22.2712 39 19 39 15.7288 39 12.8245 38.4503 11 37.6003 V 30 h 0.9997 C 9.7907 29.9999 8 28.2091 8 26 v -2 c 0 -2.2091 1.7908 -4 4 -4 h -1 v -3 c 0 -3.8381 3.089 -6.9548 6.9166 -6.9995 l 0.537 -5.1653 C 17.7453 4.5274 17 3.8215 17 3 17 1.8954 17.8954 1 19 1 Z m 6.9999 20.0001 h -14 c -1.6568 0 -3 1.3431 -3 3 v 2 c 0 1.6568 1.3432 3 3 3 h 14 c 1.6568 0 3 -1.3432 3 -3 v -2 c 0 -1.6569 -1.3432 -3 -3 -3 z M 19 31.25 18 31.0145 V 33 h 2 V 31.0145 Z M 25.9999 33 C 26 31 25.2371 31.323 24 30.9954 V 33 Z M 21 31.0609 V 33 h 2 V 31.0331 Z M 15 31.0331 V 33 h 2 V 31.0609 Z M 12 33 h 2 V 30.9954 C 12.7628 31.323 12 31 12 33 Z m 7 3 1 -0.0228 V 34 h -2 v 1.9772 z m 6.6475 -2 H 24 v 1.1936 C 24.7917 34.8545 25.3305 34.4373 25.6475 34 Z M 21 34 v 1.9024 c 0.7607 -0.0794 1.4253 -0.2043 2 -0.363 V 34 Z m -6 0 v 1.5 h -0.1384 c 0.6057 0.1776 1.3158 0.3165 2.1384 0.4024 V 34 Z m -2.6477 0 c 0.3171 0.4373 0.8559 0.8545 1.6477 1.1936 V 34 Z M 14 24 h 2 v 2 h -2 z m 8 0 h 2 v 2 H 22 Z M 11.9999 22.0001 h 1.1962 C 12.1797 22.6125 11.5 23.7269 11.5 25 c 0 1.2732 0.6798 2.3876 1.6963 3.0001 h -1.1964 c -1.1045 0 -2 -0.8955 -2 -2 v -2 c 0 -1.1046 0.8955 -2 2 -2 z m 14 0 c 1.1045 0 2 0.8954 2 2 v 2 c 0 1.1045 -0.8955 2 -2 2 H 24.8037 C 25.8202 27.3876 26.5 26.2732 26.5 25 c 0 -1.2731 -0.6798 -2.3875 -1.6961 -2.9999 z m -9.1962 6 C 17.8202 27.3876 18.5 26.2732 18.5 25 c 0 -1.2731 -0.6798 -2.3875 -1.6961 -2.9999 h 4.3922 C 20.1797 22.6125 19.5 23.7269 19.5 25 c 0 1.2732 0.6798 2.3876 1.6963 3.0001 z"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Command="local:CustomCommands.PreviewProject">
+                    <MenuItem.Icon>
+                        <Viewbox Stretch="Uniform" Width="16" Height="16">
+                            <icons:PreviewProjectIcon/>
+                        </Viewbox>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Command="local:CustomCommands.AboutProgram"/>
+                <MenuItem Command="local:CustomCommands.AboutProgram">
+                    <MenuItem.Icon>
+                        <Viewbox Stretch="Uniform" Width="16" Height="16">
+                            <icons:AboutProgramIcon/>
+                        </Viewbox>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <ToolBar Grid.Row="1">
             <Button Command="New" ToolTip="New">
                 <Viewbox Name="vNewProject" Width="24" Height="24" Stretch="Uniform">
-                    <Canvas Width="44" Height="44">
-                        <Path Fill="#FF000000">
-                            <Path.Data>
-                                <PathGeometry Figures="M 4 1 H 28 L 40 13 V 43 H 4 Z M 8 5 V 39 H 36 V 18 H 23 V 5 Z m 19 0 v 9 h 9 z"/>
-                            </Path.Data>
-                        </Path>
-                    </Canvas>
+                    <icons:NewIcon/>
                 </Viewbox>
             </Button>
             <Button Command="Open" ToolTip="Open Level">
                 <Viewbox Name="vOpenProject" Width="24" Height="24" Stretch="Uniform">
-                    <Canvas Width="47" Height="47">
-                        <Path Fill="#FF000000">
-                            <Path.Data>
-                                <PathGeometry Figures="m 10 37 v -3 h 7 v 3 z m 0 -5 v -3 h 8 v 3 z m 0 -5 v -3 h 10 v 3 z M 4 1 H 27.25 L 40 13.75 V 24.6636 C 38.8303 23.6519 37.4784 22.8454 36 22.2999 V 18 H 23 V 5 H 8 v 34 h 11.2999 c 0.5455 1.4784 1.352 2.8303 2.3637 4 H 4 Z M 27 6.25 V 14 h 7.75 z M 31.5 23 c 1.6764 0 3.269 0.3587 4.7053 1.0036 L 31.5 34.5 42.752 36.8868 C 41.6532 42.0926 37.0329 46 31.5 46 25.1487 46 20 40.8513 20 34.5 20 28.1487 25.1487 23 31.5 23 Z"/>
-                            </Path.Data>
-                        </Path>
-                    </Canvas>
+                    <icons:OpenIcon/>
                 </Viewbox>
             </Button>
             <Separator/>
             <Button Command="Save" ToolTip="Save">
                 <Viewbox Name="vSaveProject" Width="24" Height="24" Stretch="Uniform">
-                    <Canvas Width="36" Height="36">
-                        <Path Fill="#FF000000">
-                            <Path.Data>
-                                <PathGeometry Figures="M 1 1 H 35 V 35 H 25.727291 V 24.181774 H 10.272709 V 35 H 1 Z m 12.363645 34 v -4.636355 h 6.181774 V 35 Z M 7.1818715 4.090936 v 9.272709 H 28.818129 V 4.090936 Z"/>
-                            </Path.Data>
-                        </Path>
-                    </Canvas>
+                    <icons:SaveIcon/>
                 </Viewbox>
             </Button>
-            <Button ToolTip="Preview Project" Click="button_PreviewProject_Click">
+            <Separator/>
+            <Button Command="local:CustomCommands.PreviewProject" ToolTip="Preview Project">
                 <Viewbox Width="24" Height="24" Stretch="Uniform">
-                    <Canvas Width="24" Height="24">
-                        <Path Fill="Black" Data="M19,3H14.82C14.25,1.44 12.53,0.64 11,1.2C10.14,1.5 9.5,2.16 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V5H19V19H5V5H7V7M10,17V9L15,13L10,17Z" />
-                    </Canvas>
+                    <icons:PreviewProjectIcon/>
+                </Viewbox>
+            </Button>
+            <Separator/>
+            <Button Command="local:CustomCommands.AboutProgram" ToolTip="About program">
+                <Viewbox Width="24" Height="24" Stretch="Uniform">
+                    <icons:AboutProgramIcon/>
                 </Viewbox>
             </Button>
         </ToolBar>

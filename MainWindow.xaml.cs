@@ -193,12 +193,6 @@ namespace LogicPictureLE
                 }
             }
         }
-        private void button_PreviewProject_Click(object sender, RoutedEventArgs e)
-        {
-            CalcHintsData();
-            PreviewProject previewProject = new PreviewProject(singleLevel);
-            previewProject.ShowDialog();
-        }
         private void CalcHintsData()
         {
             singleLevel.LevelData.HintsDataVertical.Clear();
@@ -315,6 +309,28 @@ namespace LogicPictureLE
                 singleLevel.LevelData.HintsDataHorizontal.Add(lHorizontalNumberHints);
             }
         }
+
+        private void commandBinding_Exit_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void commandBinding_Exit_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void commanfBinding_PreviewProject_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void commanfBinding_PreviewProject_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CalcHintsData();
+            PreviewProject previewProject = new PreviewProject(singleLevel);
+            previewProject.ShowDialog();
+        }
     }
     public static class CustomCommands
     {
@@ -325,5 +341,21 @@ namespace LogicPictureLE
                     new KeyGesture(Key.F1, ModifierKeys.Alt)
                 }
             );
+
+        public static readonly RoutedUICommand Exit = new RoutedUICommand
+            ("Exit", "Exit", typeof(CustomCommands),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.Q, ModifierKeys.Alt)
+                }
+            );
+
+        public static readonly RoutedUICommand PreviewProject = new RoutedUICommand
+            ("Preview Project", "Preview Project", typeof(CustomCommands),
+                new InputGestureCollection()
+                {
+                    new KeyGesture(Key.P, ModifierKeys.Alt)
+                }
+            );        
     }
 }

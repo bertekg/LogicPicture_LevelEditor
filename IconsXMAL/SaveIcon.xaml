@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="LogicPictureLE.IconsXMAL.SaveIcon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Canvas Width="36" Height="36">
+        <Path Fill="#FF000000">
+            <Path.Data>
+                <PathGeometry Figures="M 1 1 H 35 V 35 H 25.727291 V 24.181774 H 10.272709 V 35 H 1 Z m 12.363645 34 v -4.636355 h 6.181774 V 35 Z M 7.1818715 4.090936 v 9.272709 H 28.818129 V 4.090936 Z"/>
+            </Path.Data>
+        </Path>
+    </Canvas>
+</UserControl>

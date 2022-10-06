@@ -76,6 +76,21 @@
     <Compile Include="CommonClass\ColorData.cs" />
     <Compile Include="CommonClass\HintData.cs" />
     <Compile Include="CommonClass\ProjectCommon.cs" />
+    <Compile Include="IconsXMAL\AboutProgramIcon.xaml.cs">
+      <DependentUpon>AboutProgramIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IconsXMAL\NewIcon.xaml.cs">
+      <DependentUpon>NewIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IconsXMAL\OpenIcon.xaml.cs">
+      <DependentUpon>OpenIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IconsXMAL\PreviewProjectIcon.xaml.cs">
+      <DependentUpon>PreviewProjectIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IconsXMAL\SaveIcon.xaml.cs">
+      <DependentUpon>SaveIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LevelEditorClass\ProjectStory.cs" />
     <Compile Include="NewLevelWizard.xaml.cs">
       <DependentUpon>NewLevelWizard.xaml</DependentUpon>
@@ -99,6 +114,26 @@
       <DependentUpon>UsedColorControl.xaml</DependentUpon>
     </Compile>
     <Page Include="AboutProgram.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IconsXMAL\AboutProgramIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IconsXMAL\NewIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IconsXMAL\OpenIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IconsXMAL\PreviewProjectIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IconsXMAL\SaveIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
