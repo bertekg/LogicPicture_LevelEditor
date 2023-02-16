@@ -13,7 +13,8 @@
         <CommandBinding x:Name="commandBinding_Open" Command="Open" CanExecute="commandBinding_Open_CanExecute" Executed="commandBinding_Open_Executed"/>
         <CommandBinding x:Name="commandBinding_Save" Command="Save" CanExecute="commandBinding_Save_CanExecute" Executed="commandBinding_Save_Executed"/>
         <CommandBinding x:Name="commandBinding_Exit" Command="local:CustomCommands.Exit" CanExecute="commandBinding_Exit_CanExecute" Executed="commandBinding_Exit_Executed"/>
-        <CommandBinding x:Name="commanfBinding_PreviewProject" Command="local:CustomCommands.PreviewProject" CanExecute="commanfBinding_PreviewProject_CanExecute" Executed="commanfBinding_PreviewProject_Executed"/>
+        <CommandBinding x:Name="commandBinding_PreviewProject" Command="local:CustomCommands.PreviewProject" CanExecute="commandBinding_PreviewProject_CanExecute" Executed="commandBinding_PreviewProject_Executed"/>
+        <CommandBinding x:Name="commandBinding_CheckUniqueness" Command="local:CustomCommands.CheckUniqueness" CanExecute="commandBinding_CheckUniqueness_CanExecute" Executed="commandBinding_CheckUniqueness_Executed"/>
         <CommandBinding x:Name="commandBinding_AboutProgram" Command="local:CustomCommands.AboutProgram" CanExecute="commandBinding_AboutProgram_CanExecute" Executed="commandBinding_AboutProgram_Executed"/>
     </Window.CommandBindings>
     <Grid>
@@ -102,6 +103,11 @@
             <Button Command="local:CustomCommands.PreviewProject" ToolTip="Preview Project">
                 <Viewbox Width="24" Height="24" Stretch="Uniform">
                     <icons:PreviewProjectIcon/>
+                </Viewbox>
+            </Button>
+            <Button Name="myButton" Command="local:CustomCommands.CheckUniqueness" ToolTip="Check Uniquness">
+                <Viewbox Width="24" Height="24" Stretch="Uniform">
+                    <icons:CheckUniquenessIcon/>
                 </Viewbox>
             </Button>
             <Separator/>

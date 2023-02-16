@@ -10,6 +10,7 @@ using System.IO;
 using LogicPictureLE.UserControls;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Windows.Controls;
 
 namespace LogicPictureLE
 {
@@ -23,6 +24,7 @@ namespace LogicPictureLE
             SetCultureInfo("en-EN");
             InitializeComponent();
             InitialNewSingleLevel();
+            OpenFileCore("S_Empty Single Project_05_05.xml");
         }
         private void InitialNewSingleLevel()
         {
@@ -87,35 +89,41 @@ namespace LogicPictureLE
             bool? openResult = openFileDialog.ShowDialog();
             if (openFileDialog.FileName != String.Empty && openResult.Value == true)
             {
-                try
-                {
-                    //string contenJSON = File.ReadAllText(openFileDialog.FileName);
-                    //singleLevel = JsonConvert.DeserializeObject<SingleLevel>(contenJSON);
-                    XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.Load(openFileDialog.FileName);
-                    string xmlString = xmlDocument.OuterXml;
-                    using (StringReader read = new StringReader(xmlString))
-                    {
-                        Type outType = typeof(SingleLevel);
-
-                        XmlSerializer serializer = new XmlSerializer(outType);
-                        using (XmlReader reader = new XmlTextReader(read))
-                        {
-                            singleLevel = (SingleLevel)serializer.Deserialize(reader);
-                            reader.Close();
-                        }
-                        read.Close();
-                    }
-                    grid_MainContent.Children.Clear();
-                    singleLevelEditor = new SingleLevelEditor(singleLevel);
-                    grid_MainContent.Children.Add(singleLevelEditor);
-                }
-                catch (ArgumentException exeption)
-                {
-                    MessageBox.Show("Message of error:\n" + exeption.Message, "Error during open file", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                OpenFileCore(openFileDialog.FileName);
             }
         }
+
+        private void OpenFileCore(string openFilePath)
+        {
+            try
+            {
+                //string contenJSON = File.ReadAllText(openFileDialog.FileName);
+                //singleLevel = JsonConvert.DeserializeObject<SingleLevel>(contenJSON);
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(openFilePath);
+                string xmlString = xmlDocument.OuterXml;
+                using (StringReader read = new StringReader(xmlString))
+                {
+                    Type outType = typeof(SingleLevel);
+
+                    XmlSerializer serializer = new XmlSerializer(outType);
+                    using (XmlReader reader = new XmlTextReader(read))
+                    {
+                        singleLevel = (SingleLevel)serializer.Deserialize(reader);
+                        reader.Close();
+                    }
+                    read.Close();
+                }
+                grid_MainContent.Children.Clear();
+                singleLevelEditor = new SingleLevelEditor(singleLevel);
+                grid_MainContent.Children.Add(singleLevelEditor);
+            }
+            catch (ArgumentException exeption)
+            {
+                MessageBox.Show("Message of error:\n" + exeption.Message, "Error during open file", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void commandBinding_Save_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -320,16 +328,28 @@ namespace LogicPictureLE
             this.Close();
         }
 
-        private void commanfBinding_PreviewProject_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void commandBinding_PreviewProject_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
 
-        private void commanfBinding_PreviewProject_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void commandBinding_PreviewProject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             CalcHintsData();
             PreviewProject previewProject = new PreviewProject(singleLevel);
             previewProject.ShowDialog();
+        }
+
+        private void commandBinding_CheckUniqueness_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void commandBinding_CheckUniqueness_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CalcHintsData();
+            CheckUniqueness checkUniqueness = new CheckUniqueness(singleLevel);
+            checkUniqueness.ShowDialog();
         }
     }
     public static class CustomCommands
@@ -339,23 +359,27 @@ namespace LogicPictureLE
                 new InputGestureCollection()
                 {
                     new KeyGesture(Key.F1, ModifierKeys.Alt)
-                }
-            );
+                } );
 
         public static readonly RoutedUICommand Exit = new RoutedUICommand
             ("Exit", "Exit", typeof(CustomCommands),
                 new InputGestureCollection()
                 {
                     new KeyGesture(Key.Q, ModifierKeys.Alt)
-                }
-            );
+                } );
 
         public static readonly RoutedUICommand PreviewProject = new RoutedUICommand
             ("Preview Project", "Preview Project", typeof(CustomCommands),
                 new InputGestureCollection()
                 {
                     new KeyGesture(Key.P, ModifierKeys.Alt)
-                }
-            );        
+                } );
+
+        public static readonly RoutedCommand CheckUniqueness = new RoutedUICommand
+            ("Check Uniqueness", "Check Uniqueness", typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.U, ModifierKeys.Alt)
+            } );
     }
 }
