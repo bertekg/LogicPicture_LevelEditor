@@ -24,7 +24,7 @@ namespace LogicPictureLE
             SetCultureInfo("en-EN");
             InitializeComponent();
             InitialNewSingleLevel();
-            OpenFileCore("S_Empty Single Project_05_05.xml");
+            OpenFileCore("S_Fish_10_10.xml");
         }
         private void InitialNewSingleLevel()
         {

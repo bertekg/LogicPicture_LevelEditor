@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Viewbox Stretch="Uniform">
-                <Grid Name="inputResultGrid" Background="Gray">
+                <Grid Name="inputResultBackground" Background="Gray">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
