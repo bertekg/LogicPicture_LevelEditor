@@ -53,7 +53,7 @@ namespace LogicPictureLE
             {
                 Debug.Write($"Row {i}, contains {rowIterations[i].Count} iterations, Valuse:");
                 totalPossibilities *= rowIterations[i].Count;
-                for (int j = 0; j < singleLevel.LevelData.HintsDataVertical[i].Count; j++)
+                for (int j = 0; j < singleLevel.LevelData.HintsDataVertical[i].Length; j++)
                 {
                     Debug.Write($" {singleLevel.LevelData.HintsDataVertical[i][j].Value}");
                 }
@@ -81,29 +81,29 @@ namespace LogicPictureLE
         {
             List<List<Iteration>> rows = new List<List<Iteration>>();
             int width = singleLevel.LevelData.WidthX;
-            foreach (List<HintData> hints in singleLevel.LevelData.HintsDataVertical)
+            foreach (HintData[] hints in singleLevel.LevelData.HintsDataVertical)
             {
                 List<Iteration> iterations = new List<Iteration>();
 
                 int sum = 0;
-                for (int j = 0; j < hints.Count; j++)
+                for (int j = 0; j < hints.Length; j++)
                 {
                     sum += hints[j].Value;
-                    if (j < hints.Count - 1)
+                    if (j < hints.Length - 1)
                     {
                         sum++;
                     }
                 }
                 int left = width - sum;
 
-                int[] startsInitialIndex = new int[hints.Count];
+                int[] startsInitialIndex = new int[hints.Length];
                 int flyIndex = 0;
-                for (int i = 0; i < hints.Count; i++)
+                for (int i = 0; i < hints.Length; i++)
                 {
                     startsInitialIndex[i] = flyIndex;
                     flyIndex += hints[i].Value + 1;
                 }
-                int[] indexOffset = new int[hints.Count];
+                int[] indexOffset = new int[hints.Length];
                 int maxIndex = startsInitialIndex.Length - 1;
                 bool looping = true;
                 while (looping)
@@ -208,7 +208,7 @@ namespace LogicPictureLE
                 }
             }
 
-            int maxSizeHintsHorizontalCounts = singleLevel.LevelData.HintsDataHorizontal.OrderByDescending(list => list.Count()).First().Count;
+            int maxSizeHintsHorizontalCounts = singleLevel.LevelData.HintsDataHorizontal.OrderByDescending(list => list.Count()).First().Length;
             RowDefinition gridRowDefTemp;
             for (int i = 0; i < maxSizeHintsHorizontalCounts; i++)
             {
@@ -219,12 +219,12 @@ namespace LogicPictureLE
             inputResultHintsHorizontal.Children.Clear();
             for (int i = 0; i < singleLevel.LevelData.WidthX; i++)
             {
-                for (int j = 0; j < singleLevel.LevelData.HintsDataHorizontal[i].Count; j++)
+                for (int j = 0; j < singleLevel.LevelData.HintsDataHorizontal[i].Length; j++)
                 {
                     TextBlock textBlockHint = new TextBlock();
                     textBlockHint.Text = singleLevel.LevelData.HintsDataHorizontal[i][j].Value.ToString();
                     Grid.SetColumn(textBlockHint, 2 * i + 1);
-                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts - singleLevel.LevelData.HintsDataHorizontal[i].Count + j);
+                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts - singleLevel.LevelData.HintsDataHorizontal[i].Length + j);
                     byte byteResult = singleLevel.LevelData.HintsDataHorizontal[i][j].ColorID;
                     textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
                     textBlockHint.FontSize = 35;
@@ -233,7 +233,7 @@ namespace LogicPictureLE
                     textBlockHint.VerticalAlignment = VerticalAlignment.Center;
                     inputResultHintsHorizontal.Children.Add(textBlockHint);
                 }
-                if (singleLevel.LevelData.HintsDataHorizontal[i].Count == 0)
+                if (singleLevel.LevelData.HintsDataHorizontal[i].Length == 0)
                 {
                     TextBlock textBlockHint = new TextBlock();
                     textBlockHint.Text = "0";
@@ -248,7 +248,7 @@ namespace LogicPictureLE
                 }
             }
 
-            int maxSizeHintsVerticalCounts = singleLevel.LevelData.HintsDataVertical.OrderByDescending(list => list.Count()).First().Count;
+            int maxSizeHintsVerticalCounts = singleLevel.LevelData.HintsDataVertical.OrderByDescending(list => list.Count()).First().Length;
             for (int i = 0; i < maxSizeHintsVerticalCounts; i++)
             {
                 gridColDefTemp = new ColumnDefinition();
@@ -282,11 +282,11 @@ namespace LogicPictureLE
             inputResultHintsVertical.Children.Clear();
             for (int j = 0; j < singleLevel.LevelData.HeightY; j++)
             {
-                for (int i = 0; i < singleLevel.LevelData.HintsDataVertical[j].Count; i++)
+                for (int i = 0; i < singleLevel.LevelData.HintsDataVertical[j].Length; i++)
                 {
                     TextBlock textBlockHint = new TextBlock();
                     textBlockHint.Text = singleLevel.LevelData.HintsDataVertical[j][i].Value.ToString();
-                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts - singleLevel.LevelData.HintsDataVertical[j].Count + i);
+                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts - singleLevel.LevelData.HintsDataVertical[j].Length + i);
                     Grid.SetRow(textBlockHint, 2 * (singleLevel.LevelData.HeightY - j - 1) + 1);
                     byte byteResult = singleLevel.LevelData.HintsDataVertical[j][i].ColorID;
                     textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
@@ -296,7 +296,7 @@ namespace LogicPictureLE
                     textBlockHint.VerticalAlignment = VerticalAlignment.Center;
                     inputResultHintsVertical.Children.Add(textBlockHint);
                 }
-                if (singleLevel.LevelData.HintsDataVertical[j].Count == 0)
+                if (singleLevel.LevelData.HintsDataVertical[j].Length == 0)
                 {
                     TextBlock textBlockHint = new TextBlock();
                     textBlockHint.Text = "0";
@@ -378,7 +378,7 @@ namespace LogicPictureLE
                     rectangleTempEnd.VerticalAlignment = VerticalAlignment.Stretch;
                     Grid.SetColumn(rectangleTempEnd, 2 * x + 1);
                     Grid.SetRow(rectangleTempEnd, 2 * ((singleLevel.LevelData.HeightY - 1) - y) + 1);
-                    TileData tileData = singleLevel.LevelData.TilesData.Find(item => (item.PosX == x && item.PosY == y));
+                    TileData tileData = singleLevel.LevelData.TilesData[x][y];
                     if (tileData != null)
                     {
                         rectangleTempEnd.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[tileData.ColorID]));

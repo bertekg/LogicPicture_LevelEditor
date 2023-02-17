@@ -39,21 +39,21 @@ namespace LogicPictureLE
             int heightY = level.LevelData.HeightY;
             tbLevelHeight.Text = heightY.ToString();
             tbLevelTotalCells.Text = (widthX * heightY).ToString();
-            tbLevelFilledAllCellsCount.Text = level.LevelData.TilesData.Count.ToString();
-            List<TileData> insideTiles = level.LevelData.TilesData.FindAll(item => item.PosX < widthX && item.PosY < heightY);
-            List<TileData> outsideTiles = level.LevelData.TilesData.FindAll(item => item.PosX >= widthX || item.PosY >= heightY);
-            tbLevelFilledViewCellsCount.Text = (insideTiles.Count).ToString();
-            tbLevelFilledOutsideViewCellsCount.Text = outsideTiles.Count.ToString();
-            tbLevelFilledViewInPrecent.Text = (((double)(insideTiles.Count) / (double)(widthX * heightY)) * 100.0).ToString() + "%";
+            tbLevelFilledAllCellsCount.Text = level.LevelData.TilesData.Length.ToString();
+            //List<TileData> insideTiles = level.LevelData.TilesData.FindAll(item => item.PosX < widthX && item.PosY < heightY);
+            //List<TileData> outsideTiles = level.LevelData.TilesData.FindAll(item => item.PosX >= widthX || item.PosY >= heightY);
+            //tbLevelFilledViewCellsCount.Text = (insideTiles.Count).ToString();
+            //tbLevelFilledOutsideViewCellsCount.Text = outsideTiles.Count.ToString();
+            //tbLevelFilledViewInPrecent.Text = (((double)(insideTiles.Count) / (double)(widthX * heightY)) * 100.0).ToString() + "%";
             lvAllCells.ItemsSource = level.LevelData.TilesData;
-            lvInsideCells.ItemsSource = insideTiles;
-            lvOutsideCells.ItemsSource = outsideTiles;
+            //lvInsideCells.ItemsSource = insideTiles;
+            //lvOutsideCells.ItemsSource = outsideTiles;
             List<ColorDetail> colors = new List<ColorDetail>();
-            for (byte i = 0; i < level.LevelData.ColorsDataTiles.Count; i++)
+            for (byte i = 0; i < level.LevelData.ColorsDataTiles.Length; i++)
             {
                 Color color = GetColorFromColorData(level.LevelData.ColorsDataTiles[i]);
-                List<TileData> tilesInColor = level.LevelData.TilesData.FindAll(item => item.ColorID == i);
-                double dProcentOfColor = (((double)tilesInColor.Count) / (level.LevelData.TilesData.Count)) * 100.0;
+                List<TileData> tilesInColor = GetListOfSpecificColor(level.LevelData.TilesData, i);// level.LevelData.TilesData.FindAll(item => item.ColorID == i);
+                double dProcentOfColor = (((double)tilesInColor.Count) / (level.LevelData.TilesData.Length)) * 100.0;
                 ColorDetail cdTemp = new ColorDetail(i, color, tilesInColor.Count, dProcentOfColor);
                 colors.Add(cdTemp);
             }
@@ -69,6 +69,23 @@ namespace LogicPictureLE
             UpadteFinalPicture();
             UpdateLanguage(Lang.EN);            
         }
+
+        private List<TileData> GetListOfSpecificColor(TileData[][] tilesData, byte i)
+        {
+            List <TileData> foundTiles = new List <TileData>();
+            foreach (TileData[] tiles in tilesData)
+            {
+                foreach (TileData tile in tiles)
+                {
+                    if (tile.ColorID == i)
+                    {
+                        foundTiles.Add(tile);
+                    }
+                }
+            }
+            return foundTiles;
+        }
+
         private void UpdateLanguage(Lang language)
         {
             lang = language;
@@ -140,7 +157,7 @@ namespace LogicPictureLE
                 }
             }
 
-            int maxSizeHintsHorizontalCounts = singleLevel.LevelData.HintsDataHorizontal.OrderByDescending(list => list.Count()).First().Count;
+            int maxSizeHintsHorizontalCounts = singleLevel.LevelData.HintsDataHorizontal.OrderByDescending(list => list.Count()).First().Length;
             RowDefinition gridRowDefTemp;
             for (int i = 0; i < maxSizeHintsHorizontalCounts; i++)
             {
@@ -155,12 +172,12 @@ namespace LogicPictureLE
             gEndHintsHorizontal.Children.Clear();
             for (int i = 0; i < singleLevel.LevelData.WidthX; i++)
             {
-                for (int j = 0; j < singleLevel.LevelData.HintsDataHorizontal[i].Count; j++)
+                for (int j = 0; j < singleLevel.LevelData.HintsDataHorizontal[i].Length; j++)
                 {
                     TextBlock textBlockHint = new TextBlock();
                     textBlockHint.Text = singleLevel.LevelData.HintsDataHorizontal[i][j].Value.ToString();
                     Grid.SetColumn(textBlockHint, 2 * i + 1);
-                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts - singleLevel.LevelData.HintsDataHorizontal[i].Count + j);
+                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts - singleLevel.LevelData.HintsDataHorizontal[i].Length + j);
                     byte byteResult = singleLevel.LevelData.HintsDataHorizontal[i][j].ColorID;
                     textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
                     textBlockHint.FontSize = 35;
@@ -171,7 +188,7 @@ namespace LogicPictureLE
                     textBlockHint = new TextBlock();
                     textBlockHint.Text = singleLevel.LevelData.HintsDataHorizontal[i][j].Value.ToString();
                     Grid.SetColumn(textBlockHint, 2 * i + 1);
-                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts - singleLevel.LevelData.HintsDataHorizontal[i].Count + j);
+                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts - singleLevel.LevelData.HintsDataHorizontal[i].Length + j);
                     byteResult = singleLevel.LevelData.HintsDataHorizontal[i][j].ColorID;
                     textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
                     textBlockHint.FontSize = 35;
@@ -180,7 +197,7 @@ namespace LogicPictureLE
                     textBlockHint.VerticalAlignment = VerticalAlignment.Center;
                     gEndHintsHorizontal.Children.Add(textBlockHint);
                 }
-                if(singleLevel.LevelData.HintsDataHorizontal[i].Count == 0)
+                if(singleLevel.LevelData.HintsDataHorizontal[i].Length == 0)
                 {
                     TextBlock textBlockHint = new TextBlock();
                     textBlockHint.Text = "0";
@@ -205,7 +222,7 @@ namespace LogicPictureLE
                 }
             }
 
-            int maxSizeHintsVerticalCounts = singleLevel.LevelData.HintsDataVertical.OrderByDescending(list => list.Count()).First().Count;
+            int maxSizeHintsVerticalCounts = singleLevel.LevelData.HintsDataVertical.OrderByDescending(list => list.Count()).First().Length;
             for (int i = 0; i < maxSizeHintsVerticalCounts; i++)
             {
                 gridColDefTemp = new ColumnDefinition();
@@ -252,11 +269,11 @@ namespace LogicPictureLE
             gEndHintsVertical.Children.Clear();
             for (int j = 0; j < singleLevel.LevelData.HeightY; j++)
             {
-                for (int i = 0; i < singleLevel.LevelData.HintsDataVertical[j].Count; i++)
+                for (int i = 0; i < singleLevel.LevelData.HintsDataVertical[j].Length; i++)
                 {
                     TextBlock textBlockHint = new TextBlock();
                     textBlockHint.Text = singleLevel.LevelData.HintsDataVertical[j][i].Value.ToString();
-                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts - singleLevel.LevelData.HintsDataVertical[j].Count + i);
+                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts - singleLevel.LevelData.HintsDataVertical[j].Length + i);
                     Grid.SetRow(textBlockHint, 2 * ((int)singleLevel.LevelData.HeightY - j - 1) + 1);
                     byte byteResult = singleLevel.LevelData.HintsDataVertical[j][i].ColorID;
                     textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
@@ -267,7 +284,7 @@ namespace LogicPictureLE
                     gStartHintsVertical.Children.Add(textBlockHint);
                     textBlockHint = new TextBlock();
                     textBlockHint.Text = singleLevel.LevelData.HintsDataVertical[j][i].Value.ToString();
-                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts - singleLevel.LevelData.HintsDataVertical[j].Count + i);
+                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts - singleLevel.LevelData.HintsDataVertical[j].Length + i);
                     Grid.SetRow(textBlockHint, 2 * (singleLevel.LevelData.HeightY - j - 1) + 1);
                     byteResult = singleLevel.LevelData.HintsDataVertical[j][i].ColorID;
                     textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
@@ -277,7 +294,7 @@ namespace LogicPictureLE
                     textBlockHint.VerticalAlignment = VerticalAlignment.Center;
                     gEndHintsVertical.Children.Add(textBlockHint);
                 }
-                if (singleLevel.LevelData.HintsDataVertical[j].Count == 0)
+                if (singleLevel.LevelData.HintsDataVertical[j].Length == 0)
                 {
                     TextBlock textBlockHint = new TextBlock();
                     textBlockHint.Text = "0";
@@ -415,7 +432,7 @@ namespace LogicPictureLE
                     Grid.SetRow(rectangleTempStart, 2 * ((singleLevel.LevelData.HeightY - 1) - y) + 1);
                     Grid.SetRow(rectangleTempEnd, 2 * ((singleLevel.LevelData.HeightY - 1) - y) + 1);
                     rectangleTempStart.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataNeutral));
-                    TileData tileData = singleLevel.LevelData.TilesData.Find(item => (item.PosX == x && item.PosY == y));
+                    TileData tileData = singleLevel.LevelData.TilesData[x][y];
                     if (tileData != null)
                     {
                         rectangleTempEnd.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[tileData.ColorID]));
@@ -443,10 +460,9 @@ namespace LogicPictureLE
             {
                 for (int y = 0; y < singleLevel.LevelData.WidthX; y++)
                 {
-                    TileData tileDataFound = singleLevel.LevelData.TilesData.Find(item => (item.PosX == y && item.PosY == singleLevel.LevelData.HeightY - x - 1));
+                    TileData tileDataFound = singleLevel.LevelData.TilesData[x][singleLevel.LevelData.HeightY - x - 1];
                     if (tileDataFound != null)
                     {
-                        byte byteResult = tileDataFound.ColorID;
                         pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Blue;
                         pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Green;
                         pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Red;

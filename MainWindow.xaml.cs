@@ -24,7 +24,7 @@ namespace LogicPictureLE
             SetCultureInfo("en-EN");
             InitializeComponent();
             InitialNewSingleLevel();
-            OpenFileCore("S_Fish_10_10.xml");
+            //OpenFileCore("S_Fish_10_10.xml");
         }
         private void InitialNewSingleLevel()
         {
@@ -203,21 +203,18 @@ namespace LogicPictureLE
         }
         private void CalcHintsData()
         {
-            singleLevel.LevelData.HintsDataVertical.Clear();
+            singleLevel.LevelData.HintsDataVertical = new HintData[singleLevel.LevelData.HeightY][];
             for (byte y = 0; y < singleLevel.LevelData.HeightY; y++)
             {
-                byte prevCellId = 0;
-                byte currCellId = 0;
+                int prevCellId = 0;
                 byte currentIdCombo = 0;
                 List<HintData> lVerticalNumberHints = new List<HintData>();
                 for (byte x = 0; x < singleLevel.LevelData.WidthX; x++)
-                {
-                    Point currentPoint = new Point(x, y);                    
-                    TileData tileDataFound = singleLevel.LevelData.TilesData.Find(item => (item.PosX == currentPoint.X && item.PosY == currentPoint.Y));
-                    if (tileDataFound != null)
+                {                  
+                    TileData tileDataFound = singleLevel.LevelData.TilesData[x][y];
+                    if (singleLevel.LevelData.TilesData[x][y].IsSelected)
                     {
-                        currCellId = (byte)(tileDataFound.ColorID + 1);
-                        if (currCellId == prevCellId)
+                        if ((tileDataFound.ColorID + 1) == prevCellId)
                         {
                             currentIdCombo++;
                         }
@@ -233,7 +230,7 @@ namespace LogicPictureLE
                         {
                             currentIdCombo = 1;
                         }
-                        prevCellId = currCellId;
+                        prevCellId = tileDataFound.ColorID + 1;
                     }
                     else
                     {
@@ -257,24 +254,21 @@ namespace LogicPictureLE
                     currentIdCombo = 0;
                     prevCellId = 0;
                 }
-                singleLevel.LevelData.HintsDataVertical.Add(lVerticalNumberHints);
+                singleLevel.LevelData.HintsDataVertical[y] = ConvertListToArray(lVerticalNumberHints);
             }
 
-            singleLevel.LevelData.HintsDataHorizontal.Clear();
+            singleLevel.LevelData.HintsDataHorizontal = new HintData[singleLevel.LevelData.WidthX][];
             for (byte x = 0; x < singleLevel.LevelData.WidthX; x++)
             {
-                byte prevCellId = 0;
+                int prevCellId = 0;
                 byte currentIdCombo = 0;
                 List<HintData> lHorizontalNumberHints = new List<HintData>();
                 for (byte y = singleLevel.LevelData.HeightY; y > 0; y--)
                 {
-                    Point currentPoint = new Point(x, y - 1);
-                    byte currCellId = 0;
-                    TileData tileDataFound = singleLevel.LevelData.TilesData.Find(item => (item.PosX == currentPoint.X && item.PosY == currentPoint.Y));
+                    TileData tileDataFound = singleLevel.LevelData.TilesData[x][y -1];
                     if (tileDataFound != null)
                     {
-                        currCellId = (byte)(tileDataFound.ColorID + 1);
-                        if (currCellId == prevCellId)
+                        if (tileDataFound.ColorID + 1 == prevCellId)
                         {
                             currentIdCombo++;
                         }
@@ -290,7 +284,7 @@ namespace LogicPictureLE
                         {
                             currentIdCombo = 1;
                         }
-                        prevCellId = currCellId;
+                        prevCellId = tileDataFound.ColorID + 1;
                     }
                     else
                     {
@@ -314,8 +308,18 @@ namespace LogicPictureLE
                     currentIdCombo = 0;
                     prevCellId = 0;
                 }
-                singleLevel.LevelData.HintsDataHorizontal.Add(lHorizontalNumberHints);
+                singleLevel.LevelData.HintsDataHorizontal[x] = ConvertListToArray(lHorizontalNumberHints);
             }
+        }
+
+        private HintData[] ConvertListToArray(List<HintData> listHints)
+        {
+            HintData[] arrayHints = new HintData[listHints.Count];
+            for (int i = 0; i < listHints.Count; i++)
+            {
+                arrayHints[i] = listHints[i];
+            }
+            return arrayHints;
         }
 
         private void commandBinding_Exit_CanExecute(object sender, CanExecuteRoutedEventArgs e)

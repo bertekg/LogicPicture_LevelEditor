@@ -8,18 +8,18 @@ public class Level
     public ColorData ColorDataNeutral { get; set; }
     public ColorData ColorDataBackground { get; set; }
     public ColorData ColorDataMarker { get; set; }
-    public List<ColorData> ColorsDataTiles { get; set; }
-    public List<TileData> TilesData { get; set; }
-    public List<List<HintData>> HintsDataVertical { get; set; }
-    public List<List<HintData>> HintsDataHorizontal { get; set; }
+    public ColorData[] ColorsDataTiles { get; set; }
+    public TileData[][] TilesData { get; set; }
+    public HintData[][] HintsDataHorizontal { get; set; }
+    public HintData[][] HintsDataVertical { get; set; }
     public Level()
     {
 
     }
     public Level(byte widthX, byte heightY, ColorData colorDataNeutral,
-        ColorData colorDataBackground, ColorData colorDataMarker, 
-        List<ColorData> colorsDataTiles, List<TileData> tilesData, 
-        List<List<HintData>> hintsDataHorizontal, List<List<HintData>> hintsDataVertical)
+        ColorData colorDataBackground, ColorData colorDataMarker,
+        ColorData[] colorsDataTiles, TileData[][] tilesData,
+        HintData[][] hintsDataHorizontal, HintData[][] hintsDataVertical)
     {
         WidthX = widthX;
         HeightY = heightY;

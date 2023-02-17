@@ -37,7 +37,7 @@ namespace LogicPictureLE.UserControls
             SolidColorBrush scbWhite = new SolidColorBrush(Colors.White);
             LinearGradientBrush lgbGreenYelowToWhite90 = new LinearGradientBrush(Colors.GreenYellow, Colors.Cyan, 45.0);
             LinearGradientBrush lgbPurpleToRed90 = new LinearGradientBrush(Colors.Purple, Colors.Red, 45.0);
-            for (int i = 0; i < level.ColorsDataTiles.Count; i++)
+            for (int i = 0; i < level.ColorsDataTiles.Length; i++)
             {
                 SelectionColorControl borderTemp = (SelectionColorControl)wrapPanel_ColorsForSelection.Children[i];
                 if (i == leftButtonEditMode)
@@ -109,9 +109,9 @@ namespace LogicPictureLE.UserControls
                     Grid.SetColumn(rectangleTemp, i);
                     Grid.SetRow(rectangleTemp, (level.HeightY - 1) - j);
 
-                    if (level.TilesData.Any(item => (item.PosX == i && item.PosY == j)))
+                    if (level.TilesData[i][j].IsSelected)
                     {
-                        byte colorId = level.TilesData.Find(item => item.PosX == i && item.PosY == j).ColorID;
+                        int colorId = level.TilesData[i][j].ColorID;
                         rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorData(level.ColorsDataTiles[colorId]));
                     }
                     else
@@ -127,7 +127,7 @@ namespace LogicPictureLE.UserControls
         {
             stackPanel_UsedColors.Children.Clear();
             wrapPanel_ColorsForSelection.Children.Clear();
-            for (byte i = 0; i < level.ColorsDataTiles.Count; i++)
+            for (byte i = 0; i < level.ColorsDataTiles.Length; i++)
             {
                 UsedColorControl usedColorControl = new UsedColorControl(i, level.ColorsDataTiles[i]);
                 usedColorControl.colorPicker_Color.SelectedColorChanged += colorPicker_Color_SelectedColorChanged;
@@ -216,7 +216,8 @@ namespace LogicPictureLE.UserControls
             if(color != null)
             {
                 level.ColorsDataTiles[index] = GetColorDataFromColor(color.Value);
-                if (level.TilesData.Any(item => item.ColorID == index))
+                bool isContaining = LevelContainColor(index);
+                if (isContaining)
                 {
                     DrawAllLevelCells();                    
                 }
@@ -224,14 +225,35 @@ namespace LogicPictureLE.UserControls
                 UpdateEditMode();
             }
         }
+
+        private bool LevelContainColor(byte index)
+        {
+            bool isContaining = false;
+            for (int i = 0; i < level.WidthX; i++)
+            {
+                for (int j = 0; j < level.HeightY; j++)
+                {
+                    if (level.TilesData[i][j].IsSelected && level.TilesData[i][j].ColorID == index)
+                    {
+                        isContaining = true;
+                        break;
+                    }
+                }
+                if (isContaining)
+                {
+                    break;
+                }
+            }
+            return isContaining;
+        }
+
         private void button_DeleteColor_Click(object sender, RoutedEventArgs e)
         {
-            if (level.ColorsDataTiles.Count > 1)
+            if (level.ColorsDataTiles.Length > 1)
             {
                 Button button = sender as Button;
                 byte index = (byte)button.Tag;
-                List<TileData> tiles = level.TilesData.FindAll(item => item.ColorID == index);
-                if (tiles.Count > 0)
+                if (LevelContainColor(index))
                 {
                     MessageBoxResult messageBoxResult = MessageBox.Show("For color to delete some Tiles use it.\n" +
                         "When you delete color all connected tiles will be deleted too.\n" +
@@ -242,15 +264,8 @@ namespace LogicPictureLE.UserControls
                         return;
                     }
                 }
-                level.ColorsDataTiles.RemoveAt(index);
-                level.TilesData.RemoveAll(item => item.ColorID == index);
-                foreach (TileData tileData in level.TilesData)
-                {
-                    if (tileData.ColorID > index)
-                    {
-                        tileData.ColorID -= 1;
-                    }
-                }
+                level.ColorsDataTiles = RemoveColor(index);
+                DeselectTilesWithColor(index);
                 InitialEditMode();
                 DrawAllLevelCells();
                 DrawColorPickerOptionMode();
@@ -263,40 +278,79 @@ namespace LogicPictureLE.UserControls
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
+        private void DeselectTilesWithColor(byte index)
+        {
+            foreach (TileData[] tiles in level.TilesData)
+            {
+                foreach (var tile in tiles)
+                {
+                    if (tile.IsSelected && tile.ColorID == index)
+                    {
+                        tile.IsSelected = false;
+                    }
+                    if (tile.IsSelected && tile.ColorID > index)
+                    {
+                        tile.ColorID -= 1;
+                    }
+                }
+            }
+        }
+
+        private ColorData[] RemoveColor(byte index)
+        {
+            ColorData[] colors = new ColorData[level.ColorsDataTiles.Length - 1];
+            for (int i = 0; i < colors.Length; i++)
+            {
+                if (i < index)
+                {
+                    colors[i] = level.ColorsDataTiles[i];
+                }
+                else
+                {
+                    colors[i] = level.ColorsDataTiles[i + 1];
+                }
+            }
+            return colors;
+        }
+
         private void button_AddNewColor_Click(object sender, RoutedEventArgs e)
         {
             Byte[] colorByte = new Byte[3];
             Random rnd = new Random();
             rnd.NextBytes(colorByte);
-            level.ColorsDataTiles.Add(new ColorData(colorByte[0], colorByte[1], colorByte[2]));
+            level.ColorsDataTiles = AddNewColor(new ColorData(colorByte[0], colorByte[1], colorByte[2]));
             DrawColorPickerOptionMode();
             UpdateEditMode();
         }
+
+        private ColorData[] AddNewColor(ColorData colorData)
+        {
+            ColorData[] colors = new ColorData[level.ColorsDataTiles.Length + 1];
+            for (int i = 0; i < level.ColorsDataTiles.Length; i++)
+            {
+                ColorData color = level.ColorsDataTiles[i];
+                colors[i] = color;
+            }
+            colors[colors.Length - 1] = colorData;
+            return colors;
+        }
+
         private void RectangleTemp_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Rectangle rectangleTemp = (Rectangle)sender;
             Point pTempTag = (Point)rectangleTemp.Tag;
 
-            TileData tileData = level.TilesData.Find(item => (item.PosX == pTempTag.X && item.PosY == pTempTag.Y));
+            TileData tileData = level.TilesData[(int)pTempTag.X][(int)pTempTag.Y];
             if (leftButtonEditMode == -1)
             {
-                if (tileData != null)
-                {
-                    level.TilesData.Remove(tileData);
-                    rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorData(level.ColorDataNeutral));
-                }
+                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].IsSelected = false;
+                rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorData(level.ColorDataNeutral));
             }
             else
             {
-                if (tileData != null)
-                {
-                    tileData.ColorID = (byte)leftButtonEditMode;
-                }
-                else
-                {
-                    level.TilesData.Add(new TileData((byte)pTempTag.X, (byte)pTempTag.Y, 
-                        (byte)leftButtonEditMode));
-                }
+                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].IsSelected = true;
+                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].ColorID = (byte)leftButtonEditMode;
                 rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorDataTiles((byte)leftButtonEditMode));
             }
             sender = rectangleTemp;
@@ -305,26 +359,14 @@ namespace LogicPictureLE.UserControls
         {
             Rectangle rectangleTemp = (Rectangle)sender;
             Point pTempTag = GetPointFromTag(sender);
-            TileData tileData = level.TilesData.Find(item => (item.PosX == pTempTag.X && item.PosY == pTempTag.Y));
             if (rightButtonEditMode == -1)
             {
-                if (tileData != null)
-                {
-                    level.TilesData.Remove(tileData);
-                    rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorData(level.ColorDataNeutral));
-                }
+                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].IsSelected = false;
+                rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorData(level.ColorDataNeutral));
             }
             else
             {
-                if (tileData != null)
-                {
-                    tileData.ColorID = (byte)rightButtonEditMode;
-                }
-                else
-                {
-                    level.TilesData.Add(new TileData((byte)pTempTag.X, (byte)pTempTag.Y,
-                        (byte)rightButtonEditMode));
-                }
+                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].IsSelected = true;
                 rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorDataTiles((byte)rightButtonEditMode));
             }
             sender = rectangleTemp;
@@ -372,7 +414,7 @@ namespace LogicPictureLE.UserControls
         {
             if (level != null)
             {
-                if (level.TilesData.Count > 0)
+                if (level.TilesData.Length > 0)
                 {
                     e.CanExecute = true;
                 }
@@ -410,7 +452,13 @@ namespace LogicPictureLE.UserControls
                 "Confirmation before delete all tiles data", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                level.TilesData.Clear();
+                foreach (TileData[] tiles in level.TilesData)
+                {
+                    foreach(TileData tile in tiles)
+                    {
+                        tile.IsSelected = false;
+                    }
+                }
                 DrawAllLevelCells();
             }            
         }
