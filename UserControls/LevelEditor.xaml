@@ -47,6 +47,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Width (X)" Grid.Row="0" Grid.Column="0"/>
                     <xctk:ByteUpDown Name="xctkByteUpDown_LevelWidth" Value="5" 
@@ -54,9 +55,11 @@
                     <TextBlock Text="Height (Y)" Grid.Row="1" Grid.Column="0"/>
                     <xctk:ByteUpDown Name="xctkByteUpDown_LevelHeight" Value="10" 
                              Grid.Row="1" Grid.Column="1"/>
+                    <Button Command="local:CustomCommands.UpdateLevelDimension" 
+                            Grid.Row="2" Grid.ColumnSpan="2" Content="Update"
+                            ToolTip="Update Alt+U"/>
                 </Grid>
             </GroupBox>
-            <Button Command="local:CustomCommands.UpdateLevelDimension" Content="Update"/>
             <GroupBox Header="Basic colors">
                 <Grid>
                     <Grid.ColumnDefinitions>

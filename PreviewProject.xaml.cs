@@ -38,23 +38,19 @@ namespace LogicPictureLE
             tbLevelWidth.Text = widthX.ToString();
             int heightY = level.LevelData.HeightY;
             tbLevelHeight.Text = heightY.ToString();
+            int total = widthX * heightY;
             tbLevelTotalCells.Text = (widthX * heightY).ToString();
-            tbLevelFilledAllCellsCount.Text = level.LevelData.TilesData.Length.ToString();
-            //List<TileData> insideTiles = level.LevelData.TilesData.FindAll(item => item.PosX < widthX && item.PosY < heightY);
-            //List<TileData> outsideTiles = level.LevelData.TilesData.FindAll(item => item.PosX >= widthX || item.PosY >= heightY);
-            //tbLevelFilledViewCellsCount.Text = (insideTiles.Count).ToString();
-            //tbLevelFilledOutsideViewCellsCount.Text = outsideTiles.Count.ToString();
-            //tbLevelFilledViewInPrecent.Text = (((double)(insideTiles.Count) / (double)(widthX * heightY)) * 100.0).ToString() + "%";
-            lvAllCells.ItemsSource = level.LevelData.TilesData;
-            //lvInsideCells.ItemsSource = insideTiles;
-            //lvOutsideCells.ItemsSource = outsideTiles;
+            int numberIsSelected = CountNumberIsSelected();
+            tbLevelFilledAllCellsCount.Text = numberIsSelected.ToString();
+            tbLevelFilledViewInPrecent.Text = (((double)(numberIsSelected) / (double)(widthX * heightY)) * 100.0).ToString() + "%";
             List<ColorDetail> colors = new List<ColorDetail>();
             for (byte i = 0; i < level.LevelData.ColorsDataTiles.Length; i++)
             {
                 Color color = GetColorFromColorData(level.LevelData.ColorsDataTiles[i]);
-                List<TileData> tilesInColor = GetListOfSpecificColor(level.LevelData.TilesData, i);// level.LevelData.TilesData.FindAll(item => item.ColorID == i);
-                double dProcentOfColor = (((double)tilesInColor.Count) / (level.LevelData.TilesData.Length)) * 100.0;
-                ColorDetail cdTemp = new ColorDetail(i, color, tilesInColor.Count, dProcentOfColor);
+                List<TileData> tilesInColor = GetListOfSpecificColor(i);
+                double percentOfColor = (tilesInColor.Count / (double)numberIsSelected) * 100.0;
+                double percentOfAll = (tilesInColor.Count / (double)total) * 100.0;
+                ColorDetail cdTemp = new ColorDetail(i, color, tilesInColor.Count, percentOfColor, percentOfAll);
                 colors.Add(cdTemp);
             }
             lvCellsWithColors.ItemsSource = colors;
@@ -70,14 +66,27 @@ namespace LogicPictureLE
             UpdateLanguage(Lang.EN);            
         }
 
-        private List<TileData> GetListOfSpecificColor(TileData[][] tilesData, byte i)
+        private int CountNumberIsSelected()
         {
-            List <TileData> foundTiles = new List <TileData>();
-            foreach (TileData[] tiles in tilesData)
+            int count = 0;
+            foreach (TileData[] tiles in singleLevel.LevelData.TilesData)
             {
                 foreach (TileData tile in tiles)
                 {
-                    if (tile.ColorID == i)
+                    if (tile.IsSelected) { count++; }
+                }
+            }
+            return count;
+        }
+
+        private List<TileData> GetListOfSpecificColor(byte i)
+        {
+            List <TileData> foundTiles = new List <TileData>();
+            foreach (TileData[] tiles in singleLevel.LevelData.TilesData)
+            {
+                foreach (TileData tile in tiles)
+                {
+                    if (tile.IsSelected && tile.ColorID == i)
                     {
                         foundTiles.Add(tile);
                     }
@@ -92,15 +101,13 @@ namespace LogicPictureLE
             switch (lang)
             {
                 case Lang.EN:
-                    textBlock_FinalCongratulation.Text = "Level Finished!!!";
-                    tbFinish_NameLevel.Text = singleLevel.ProjectStoryEN.Title + " [" + singleLevel.LevelData.WidthX.ToString() +
-                        "," + singleLevel.LevelData.HeightY.ToString() + "]";
+                    textBlock_LevelTitle.Text = singleLevel.ProjectStoryEN.Title;
+                    tbFinish_LevelDescription.Text = singleLevel.ProjectStoryEN.Description;
                     button_FianlBacToMenu.Content = "Back To Menu";
                     break;
                 case Lang.PL:
-                    textBlock_FinalCongratulation.Text = "Poziom ukończony!!!";
-                    tbFinish_NameLevel.Text = singleLevel.ProjectStoryPL.Title + " [" + singleLevel.LevelData.WidthX.ToString() +
-                        "," + singleLevel.LevelData.HeightY.ToString() + "]";
+                    textBlock_LevelTitle.Text = singleLevel.ProjectStoryPL.Title;
+                    tbFinish_LevelDescription.Text = singleLevel.ProjectStoryPL.Description;
                     button_FianlBacToMenu.Content = "Powrót do Menu";
                     break;
                 case Lang.Other:
@@ -433,7 +440,7 @@ namespace LogicPictureLE
                     Grid.SetRow(rectangleTempEnd, 2 * ((singleLevel.LevelData.HeightY - 1) - y) + 1);
                     rectangleTempStart.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataNeutral));
                     TileData tileData = singleLevel.LevelData.TilesData[x][y];
-                    if (tileData != null)
+                    if (tileData.IsSelected)
                     {
                         rectangleTempEnd.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[tileData.ColorID]));
                     }
@@ -453,15 +460,14 @@ namespace LogicPictureLE
         public WriteableBitmap GetLevelPicture()
         {
             WriteableBitmap writeableBitmap = new WriteableBitmap(singleLevel.LevelData.WidthX, singleLevel.LevelData.HeightY, 96, 96, PixelFormats.Bgra32, null);
-            ///Place where this functionality is described: http://csharphelper.com/blog/2015/07/set-the-pixels-in-a-wpf-bitmap-in-c/
             byte[] pixels1d = new byte[singleLevel.LevelData.HeightY * singleLevel.LevelData.WidthX * 4];
             int index = 0;
-            for (int x = 0; x < singleLevel.LevelData.HeightY; x++)
+            for (int vertical = 0; vertical < singleLevel.LevelData.HeightY; vertical++)
             {
-                for (int y = 0; y < singleLevel.LevelData.WidthX; y++)
+                for (int horizontal = 0; horizontal < singleLevel.LevelData.WidthX; horizontal++)
                 {
-                    TileData tileDataFound = singleLevel.LevelData.TilesData[x][singleLevel.LevelData.HeightY - x - 1];
-                    if (tileDataFound != null)
+                    TileData tileDataFound = singleLevel.LevelData.TilesData[horizontal][singleLevel.LevelData.HeightY - vertical - 1];
+                    if (tileDataFound.IsSelected)
                     {
                         pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Blue;
                         pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Green;
@@ -488,23 +494,27 @@ namespace LogicPictureLE
         }
         public class ColorDetail
         {
-            public byte colId { get; set; }
-            public Color colName { get; set; }
-            public int countOfCol { get; set; }
-            public double procToAll { get; set; }
+            public byte colorId { get; set; }
+            public Color colorName { get; set; }
+            public int countOfColor { get; set; }
+            public double percentToAllColors { get; set; }
+            public double percentToAllTiles { get; set; }
             public ColorDetail()
             {
-                colId = 0;
-                colName = new Color();
-                countOfCol = 0;
-                procToAll = 0;
+                colorId = 0;
+                colorName = new Color();
+                countOfColor = 0;
+                percentToAllColors = 0;
+                percentToAllTiles = 0;
             }
-            public ColorDetail(byte ColorId, Color ColorName, int CountOfColor, double ProcentToAll)
+            public ColorDetail(byte ColorId, Color ColorName, int CountOfColor, 
+                double PercentToAllColors, double PercentToAllTiles)
             {
-                colId = ColorId;
-                colName = ColorName;
-                countOfCol = CountOfColor;
-                procToAll = ProcentToAll;
+                colorId = ColorId;
+                colorName = ColorName;
+                countOfColor = CountOfColor;
+                percentToAllColors = PercentToAllColors;
+                percentToAllTiles = PercentToAllTiles;
             }
         }
         private void button_FinalLangEnglish_Click(object sender, RoutedEventArgs e)

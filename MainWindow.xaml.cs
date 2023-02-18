@@ -14,9 +14,6 @@ using System.Windows.Controls;
 
 namespace LogicPictureLE
 {
-    /// <summary>
-    /// Logika interakcji dla klasy MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -24,7 +21,7 @@ namespace LogicPictureLE
             SetCultureInfo("en-EN");
             InitializeComponent();
             InitialNewSingleLevel();
-            //OpenFileCore("S_Fish_10_10.xml");
+            OpenFileCore("S_Red Heart_05_05.xml");
         }
         private void InitialNewSingleLevel()
         {
@@ -206,22 +203,22 @@ namespace LogicPictureLE
             singleLevel.LevelData.HintsDataVertical = new HintData[singleLevel.LevelData.HeightY][];
             for (byte y = 0; y < singleLevel.LevelData.HeightY; y++)
             {
-                int prevCellId = 0;
+                int previousColorId = -1;
                 byte currentIdCombo = 0;
                 List<HintData> lVerticalNumberHints = new List<HintData>();
                 for (byte x = 0; x < singleLevel.LevelData.WidthX; x++)
                 {                  
                     TileData tileDataFound = singleLevel.LevelData.TilesData[x][y];
-                    if (singleLevel.LevelData.TilesData[x][y].IsSelected)
+                    if (tileDataFound.IsSelected)
                     {
-                        if ((tileDataFound.ColorID + 1) == prevCellId)
+                        if (tileDataFound.ColorID  == previousColorId)
                         {
                             currentIdCombo++;
                         }
-                        else if (prevCellId > 0)
+                        else if (previousColorId >= 0)
                         {
                             HintData hdTemp = new HintData();
-                            hdTemp.ColorID = (byte)(prevCellId - 1);
+                            hdTemp.ColorID = (byte)previousColorId;
                             hdTemp.Value = currentIdCombo;
                             lVerticalNumberHints.Add(hdTemp);
                             currentIdCombo = 1;
@@ -230,29 +227,27 @@ namespace LogicPictureLE
                         {
                             currentIdCombo = 1;
                         }
-                        prevCellId = tileDataFound.ColorID + 1;
+                        previousColorId = tileDataFound.ColorID;
                     }
                     else
                     {
                         if (currentIdCombo > 0)
                         {
                             HintData hdTemp = new HintData();
-                            hdTemp.ColorID = (byte)(prevCellId - 1);
+                            hdTemp.ColorID = (byte)previousColorId;
                             hdTemp.Value = currentIdCombo;
                             lVerticalNumberHints.Add(hdTemp);
                             currentIdCombo = 0;
-                            prevCellId = 0;
+                            previousColorId = -1;
                         }
                     }
                 }
                 if (currentIdCombo > 0)
                 {
                     HintData hdTemp = new HintData();
-                    hdTemp.ColorID = (byte)(prevCellId - 1);
+                    hdTemp.ColorID = (byte)(previousColorId);
                     hdTemp.Value = currentIdCombo;
                     lVerticalNumberHints.Add(hdTemp);
-                    currentIdCombo = 0;
-                    prevCellId = 0;
                 }
                 singleLevel.LevelData.HintsDataVertical[y] = ConvertListToArray(lVerticalNumberHints);
             }
@@ -260,55 +255,55 @@ namespace LogicPictureLE
             singleLevel.LevelData.HintsDataHorizontal = new HintData[singleLevel.LevelData.WidthX][];
             for (byte x = 0; x < singleLevel.LevelData.WidthX; x++)
             {
-                int prevCellId = 0;
+                int prevCellId = -1;
                 byte currentIdCombo = 0;
-                List<HintData> lHorizontalNumberHints = new List<HintData>();
+                List<HintData> hints = new List<HintData>();
                 for (byte y = singleLevel.LevelData.HeightY; y > 0; y--)
                 {
                     TileData tileDataFound = singleLevel.LevelData.TilesData[x][y -1];
-                    if (tileDataFound != null)
+                    if (tileDataFound.IsSelected)
                     {
-                        if (tileDataFound.ColorID + 1 == prevCellId)
+                        if (tileDataFound.ColorID == prevCellId)
                         {
                             currentIdCombo++;
                         }
-                        else if (prevCellId > 0)
+                        else if (prevCellId >= 0)
                         {
-                            HintData hdTemp = new HintData();
-                            hdTemp.ColorID = (byte)(prevCellId - 1);
-                            hdTemp.Value = currentIdCombo;
-                            lHorizontalNumberHints.Add(hdTemp);
+                            HintData hint = new HintData();
+                            hint.ColorID = (byte)(prevCellId);
+                            hint.Value = currentIdCombo;
+                            hints.Add(hint);
                             currentIdCombo = 1;
                         }
                         else
                         {
                             currentIdCombo = 1;
                         }
-                        prevCellId = tileDataFound.ColorID + 1;
+                        prevCellId = tileDataFound.ColorID;
                     }
                     else
                     {
                         if (currentIdCombo > 0)
                         {
                             HintData hdTemp = new HintData();
-                            hdTemp.ColorID = (byte)(prevCellId - 1);
+                            hdTemp.ColorID = (byte)(prevCellId);
                             hdTemp.Value = currentIdCombo;
-                            lHorizontalNumberHints.Add(hdTemp);
+                            hints.Add(hdTemp);
                             currentIdCombo = 0;
-                            prevCellId = 0;
+                            prevCellId = -1;
                         }
                     }
                 }
                 if (currentIdCombo > 0)
                 {
                     HintData hdTemp = new HintData();
-                    hdTemp.ColorID = (byte)(prevCellId - 1);
+                    hdTemp.ColorID = (byte)(prevCellId);
                     hdTemp.Value = currentIdCombo;
-                    lHorizontalNumberHints.Add(hdTemp);
+                    hints.Add(hdTemp);
                     currentIdCombo = 0;
                     prevCellId = 0;
                 }
-                singleLevel.LevelData.HintsDataHorizontal[x] = ConvertListToArray(lHorizontalNumberHints);
+                singleLevel.LevelData.HintsDataHorizontal[x] = ConvertListToArray(hints);
             }
         }
 

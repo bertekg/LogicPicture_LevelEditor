@@ -379,7 +379,7 @@ namespace LogicPictureLE
                     Grid.SetColumn(rectangleTempEnd, 2 * x + 1);
                     Grid.SetRow(rectangleTempEnd, 2 * ((singleLevel.LevelData.HeightY - 1) - y) + 1);
                     TileData tileData = singleLevel.LevelData.TilesData[x][y];
-                    if (tileData != null)
+                    if (tileData.IsSelected)
                     {
                         rectangleTempEnd.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[tileData.ColorID]));
                     }

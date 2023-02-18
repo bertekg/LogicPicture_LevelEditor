@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 
 namespace LogicPictureLE.UserControls
@@ -12,7 +13,7 @@ namespace LogicPictureLE.UserControls
     public partial class LevelEditor : UserControl
     {
         Level level;
-        int leftButtonEditMode, rightButtonEditMode;
+        int _leftButtonEditMode, _rightButtonEditMode;
         public LevelEditor(Level levelData)
         {
             InitialEditMode();
@@ -28,8 +29,8 @@ namespace LogicPictureLE.UserControls
         }
         private void InitialEditMode()
         {
-            leftButtonEditMode = 0;
-            rightButtonEditMode = -1;
+            _leftButtonEditMode = 0;
+            _rightButtonEditMode = -1;
         }
 
         private void UpdateEditMode()
@@ -40,11 +41,11 @@ namespace LogicPictureLE.UserControls
             for (int i = 0; i < level.ColorsDataTiles.Length; i++)
             {
                 SelectionColorControl borderTemp = (SelectionColorControl)wrapPanel_ColorsForSelection.Children[i];
-                if (i == leftButtonEditMode)
+                if (i == _leftButtonEditMode)
                 {
                     borderTemp.bSampleSelectMode.BorderBrush = lgbGreenYelowToWhite90;
                 }
-                else if (i == rightButtonEditMode)
+                else if (i == _rightButtonEditMode)
                 {
                     borderTemp.bSampleSelectMode.BorderBrush = lgbPurpleToRed90;
                 }
@@ -54,11 +55,11 @@ namespace LogicPictureLE.UserControls
                 }
                 wrapPanel_ColorsForSelection.Children[i] = borderTemp;
             }
-            if (leftButtonEditMode == -1)
+            if (_leftButtonEditMode == -1)
             {
                 border_ClearTileDataMode.BorderBrush = lgbGreenYelowToWhite90;
             }
-            else if (rightButtonEditMode == -1)
+            else if (_rightButtonEditMode == -1)
             {
                 border_ClearTileDataMode.BorderBrush = lgbPurpleToRed90;
             }
@@ -99,10 +100,10 @@ namespace LogicPictureLE.UserControls
                 for (int j = 0; j < level.HeightY; j++)
                 {
                     Rectangle rectangleTemp = new Rectangle();
-                    Point newPoint = new Point(i, j);
+                    PointInt newPoint = new PointInt(i, j);
                     rectangleTemp.Tag = newPoint;
-                    rectangleTemp.MouseLeftButtonDown += RectangleTemp_MouseLeftButtonDown;
-                    rectangleTemp.MouseRightButtonDown += RectangleTemp_MouseRightButtonDown;
+                    rectangleTemp.MouseLeftButtonDown += Rectangle_MouseLeftButtonDown;
+                    rectangleTemp.MouseRightButtonDown += Rectangle_MouseRightButtonDown;
                     rectangleTemp.MouseEnter += RectangleTemp_MouseEnter;
                     rectangleTemp.HorizontalAlignment = HorizontalAlignment.Stretch;
                     rectangleTemp.VerticalAlignment = VerticalAlignment.Stretch;
@@ -146,11 +147,11 @@ namespace LogicPictureLE.UserControls
         {
             SelectionColorControl selectionColorControl = (SelectionColorControl)sender;
             byte currentRightModeSelected = selectionColorControl.GetID();
-            if (currentRightModeSelected != leftButtonEditMode)
+            if (currentRightModeSelected != _leftButtonEditMode)
             {
-                if (currentRightModeSelected != rightButtonEditMode)
+                if (currentRightModeSelected != _rightButtonEditMode)
                 {
-                    rightButtonEditMode = currentRightModeSelected;
+                    _rightButtonEditMode = currentRightModeSelected;
                     UpdateEditMode();
                 }
             }
@@ -163,11 +164,11 @@ namespace LogicPictureLE.UserControls
         {
             SelectionColorControl selectionColorControl = (SelectionColorControl)sender;
             byte currentLeftModeSelected = selectionColorControl.GetID();
-            if (currentLeftModeSelected != rightButtonEditMode)
+            if (currentLeftModeSelected != _rightButtonEditMode)
             {
-                if (currentLeftModeSelected != leftButtonEditMode)
+                if (currentLeftModeSelected != _leftButtonEditMode)
                 {
-                    leftButtonEditMode = currentLeftModeSelected;
+                    _leftButtonEditMode = currentLeftModeSelected;
                     UpdateEditMode();
                 }
             }
@@ -179,11 +180,11 @@ namespace LogicPictureLE.UserControls
         private void border_ClearTileDataMode_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             int clearTileModeConst = -1;
-            if (clearTileModeConst != rightButtonEditMode)
+            if (clearTileModeConst != _rightButtonEditMode)
             {
-                if (clearTileModeConst != leftButtonEditMode)
+                if (clearTileModeConst != _leftButtonEditMode)
                 {
-                    leftButtonEditMode = clearTileModeConst;
+                    _leftButtonEditMode = clearTileModeConst;
                     UpdateEditMode();
                 }
             }
@@ -195,11 +196,11 @@ namespace LogicPictureLE.UserControls
         private void border_ClearTileDataMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             int clearTileModeConst = -1;
-            if (clearTileModeConst != leftButtonEditMode)
+            if (clearTileModeConst != _leftButtonEditMode)
             {
-                if (clearTileModeConst != rightButtonEditMode)
+                if (clearTileModeConst != _rightButtonEditMode)
                 {
-                    rightButtonEditMode = clearTileModeConst;
+                    _rightButtonEditMode = clearTileModeConst;
                     UpdateEditMode();
                 }
             }
@@ -336,39 +337,47 @@ namespace LogicPictureLE.UserControls
             return colors;
         }
 
-        private void RectangleTemp_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Rectangle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Rectangle rectangleTemp = (Rectangle)sender;
-            Point pTempTag = (Point)rectangleTemp.Tag;
 
-            TileData tileData = level.TilesData[(int)pTempTag.X][(int)pTempTag.Y];
-            if (leftButtonEditMode == -1)
+            PointInt point = (PointInt)rectangleTemp.Tag;
+            TileData tileData = level.TilesData[point.X][point.Y];
+
+            if (_leftButtonEditMode == -1)
             {
-                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].IsSelected = false;
+                tileData.IsSelected = false;
                 rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorData(level.ColorDataNeutral));
             }
             else
             {
-                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].IsSelected = true;
-                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].ColorID = (byte)leftButtonEditMode;
-                rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorDataTiles((byte)leftButtonEditMode));
+                tileData.IsSelected = true;
+                tileData.ColorID = (byte)_leftButtonEditMode;
+                rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorDataTiles((byte)_leftButtonEditMode));
             }
+
             sender = rectangleTemp;
         }
-        private void RectangleTemp_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+
+        private void Rectangle_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             Rectangle rectangleTemp = (Rectangle)sender;
-            Point pTempTag = GetPointFromTag(sender);
-            if (rightButtonEditMode == -1)
+
+            PointInt point = (PointInt)rectangleTemp.Tag;
+            TileData tileData = level.TilesData[point.X][point.Y];
+
+            if (_rightButtonEditMode == -1)
             {
-                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].IsSelected = false;
+                tileData.IsSelected = false;
                 rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorData(level.ColorDataNeutral));
             }
             else
             {
-                level.TilesData[(int)pTempTag.X][(int)pTempTag.Y].IsSelected = true;
-                rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorDataTiles((byte)rightButtonEditMode));
+                tileData.IsSelected = true;
+                tileData.ColorID = (byte)_rightButtonEditMode;
+                rectangleTemp.Fill = new SolidColorBrush(GetColorFromColorDataTiles((byte)_rightButtonEditMode));
             }
+
             sender = rectangleTemp;
         }
         private Color GetColorFromColorDataTiles(byte index)
@@ -385,13 +394,6 @@ namespace LogicPictureLE.UserControls
         {
             return Color.FromRgb(colorData.Red, colorData.Green, colorData.Blue);
         }
-
-        private static Point GetPointFromTag(object sender)
-        {
-            Rectangle rectangleTemp = (Rectangle)sender;
-            Point pTempTag = (Point)rectangleTemp.Tag;
-            return pTempTag;
-        }
         private void RectangleTemp_MouseEnter(object sender, MouseEventArgs e)
         {
 
@@ -405,9 +407,58 @@ namespace LogicPictureLE.UserControls
         }
         private void commandBinding_Update_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            level.WidthX = xctkByteUpDown_LevelWidth.Value.Value;
-            level.HeightY = xctkByteUpDown_LevelHeight.Value.Value;
+            byte width = xctkByteUpDown_LevelWidth.Value.Value;
+            byte height = xctkByteUpDown_LevelHeight.Value.Value;
+            if (CheckAfterUpadteDeletePart(width, height))
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show(
+                    "Detect tiles outside exist, after this opieration it will be removed. Do you want continue?",
+                    "Warning - Detect exist tiles outsid", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (messageBoxResult != MessageBoxResult.Yes) return;
+            }
+            level.WidthX = width;
+            level.HeightY = height;
+            RescaleLevel(width, height);
             DrawAllLevelCells();
+        }
+
+        private void RescaleLevel(byte width, byte height)
+        {
+            TileData[][] tilesData = new TileData[level.WidthX][];
+            for (int i = 0; i < level.WidthX; i++)
+            {
+                TileData[] temp = new TileData[level.HeightY];
+                for (int j = 0; j < level.HeightY; j++)
+                {
+                    temp[j] = new TileData();
+                    if (level.TilesData.Length - 1 >= i && level.TilesData[0].Length - 1 >= j) 
+                    {
+                        temp[j].IsSelected = level.TilesData[i][j].IsSelected;
+                        temp[j].ColorID = level.TilesData[i][j].ColorID;
+                    }
+                }
+                tilesData[i] = temp;
+            }
+            level.TilesData = tilesData;
+        }
+
+        private bool CheckAfterUpadteDeletePart(byte width, byte height)
+        {
+            for (byte i = width; i < level.WidthX; i++)
+            {
+                for (int j = 0; j < level.HeightY; j++)
+                {
+                    if (level.TilesData[i][j].IsSelected) return true;
+                }
+            }
+            for (byte j = height; j < level.HeightY; j++)
+            {
+                for (int i = 0; i < level.WidthX; i++)
+                {
+                    if (level.TilesData[i][j].IsSelected) return true;
+                }
+            }
+            return false;
         }
 
         private void ClearAllTilesData_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -479,5 +530,15 @@ namespace LogicPictureLE.UserControls
                 new KeyGesture(Key.U, ModifierKeys.Alt)
             }
             );
+    }
+    public struct PointInt
+    {
+        public int X { get; set; } 
+        public int Y { get; set; }
+        public PointInt(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 }

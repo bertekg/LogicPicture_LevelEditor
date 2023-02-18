@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-[System.Serializable]
+﻿[System.Serializable]
 public class Level
 {
     public byte WidthX { get; set; }
@@ -12,10 +10,7 @@ public class Level
     public TileData[][] TilesData { get; set; }
     public HintData[][] HintsDataHorizontal { get; set; }
     public HintData[][] HintsDataVertical { get; set; }
-    public Level()
-    {
-
-    }
+    public Level() { }
     public Level(byte widthX, byte heightY, ColorData colorDataNeutral,
         ColorData colorDataBackground, ColorData colorDataMarker,
         ColorData[] colorsDataTiles, TileData[][] tilesData,
