@@ -1,75 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace LogicPictureLE
 {
-    /// <summary>
-    /// Logika interakcji dla klasy PreviewProject.xaml
-    /// </summary>
     public partial class PreviewProject : Window
     {
-        SingleLevel singleLevel;
-        int offsetY;
-        enum Lang { EN, PL, Other}
-        Lang lang;
+        const int TILE_SIDE = 50;
+        const int SPACE_MIN = 5;
+        const int SPACE_MAX = 15;
+        const int TILES_GROUP = 5;
+        const int FONT_SIZE = 35;
+
+        enum Lang { EN, PL, Other }
+
+        SingleLevel _singleLevel;
+        int _offsetY;
+        Lang _lang;
+
         public PreviewProject()
         {
             InitializeComponent();
-            singleLevel = new SingleLevel();
-            Window_PrevieProject.Title = "Preview Project - Default";
+            _singleLevel = new SingleLevel();
+            Title = "Preview Project - Default";
         }
+
         public PreviewProject(SingleLevel level)
         {
             InitializeComponent();
-            singleLevel = level;
-            Window_PrevieProject.Title = "Preview Project - Single Level";
-            int widthX = level.LevelData.WidthX;
+            _singleLevel = level;
+            Title = "Preview Project - Single Level";
+            FillBasicInfoTabItem();
+
+            gStartBackgroundGrid.Background = new SolidColorBrush(GetColorFromColorData(level.LevelData.ColorDataBackground));
+            gEndBackgroundGrid.Background = new SolidColorBrush(GetColorFromColorData(level.LevelData.ColorDataBackground));
+
+            _offsetY = level.LevelData.HeightY % TILES_GROUP;
+
+            UpdateAllHints();
+            UpadteTilesDataGrids();
+            UpadteFinalPicture();
+            UpdateLanguage(Lang.EN);
+        }
+
+        private void FillBasicInfoTabItem()
+        {
+            const double PERCENT = 100.0d;
+            double widthX = _singleLevel.LevelData.WidthX;
             tbLevelWidth.Text = widthX.ToString();
-            int heightY = level.LevelData.HeightY;
+            double heightY = _singleLevel.LevelData.HeightY;
             tbLevelHeight.Text = heightY.ToString();
-            int total = widthX * heightY;
-            tbLevelTotalCells.Text = (widthX * heightY).ToString();
-            int numberIsSelected = CountNumberIsSelected();
-            tbLevelFilledAllCellsCount.Text = numberIsSelected.ToString();
-            tbLevelFilledViewInPrecent.Text = (((double)(numberIsSelected) / (double)(widthX * heightY)) * 100.0).ToString() + "%";
+            double total = widthX * heightY;
+            tbLevelTotalCells.Text = total.ToString();
+            double selectedTilesCount = CountTilesIsSelected();
+            tbLevelFilledAllCellsCount.Text = selectedTilesCount.ToString();
+            tbLevelFilledViewInPrecent.Text = (PERCENT * selectedTilesCount / total).ToString();
             List<ColorDetail> colors = new List<ColorDetail>();
-            for (byte i = 0; i < level.LevelData.ColorsDataTiles.Length; i++)
+            for (byte i = 0; i < _singleLevel.LevelData.ColorsDataTiles.Length; i++)
             {
-                Color color = GetColorFromColorData(level.LevelData.ColorsDataTiles[i]);
+                Color color = GetColorFromColorData(_singleLevel.LevelData.ColorsDataTiles[i]);
                 List<TileData> tilesInColor = GetListOfSpecificColor(i);
-                double percentOfColor = (tilesInColor.Count / (double)numberIsSelected) * 100.0;
-                double percentOfAll = (tilesInColor.Count / (double)total) * 100.0;
+                double percentOfColor = PERCENT * tilesInColor.Count / selectedTilesCount;
+                double percentOfAll = PERCENT * tilesInColor.Count / total;
                 ColorDetail cdTemp = new ColorDetail(i, color, tilesInColor.Count, percentOfColor, percentOfAll);
                 colors.Add(cdTemp);
             }
             lvCellsWithColors.ItemsSource = colors;
-
-            gStartBackgroundGrid.Background = new SolidColorBrush(GetColorFromColorData(level.LevelData.ColorDataBackground));
-            gEndBackgroundGrid.Background = new SolidColorBrush(GetColorFromColorData(level.LevelData.ColorDataBackground));
-            
-            offsetY = level.LevelData.HeightY % 5;
-            AddHintsToGrid();
-            UpdatesGridsLayoutOfPicture();
-            AddCellsToGrids();
-            UpadteFinalPicture();
-            UpdateLanguage(Lang.EN);            
         }
 
-        private int CountNumberIsSelected()
+        private double CountTilesIsSelected()
         {
-            int count = 0;
-            foreach (TileData[] tiles in singleLevel.LevelData.TilesData)
+            double count = 0;
+            foreach (TileData[] tiles in _singleLevel.LevelData.TilesData)
             {
                 foreach (TileData tile in tiles)
                 {
@@ -82,14 +88,11 @@ namespace LogicPictureLE
         private List<TileData> GetListOfSpecificColor(byte i)
         {
             List <TileData> foundTiles = new List <TileData>();
-            foreach (TileData[] tiles in singleLevel.LevelData.TilesData)
+            foreach (TileData[] tiles in _singleLevel.LevelData.TilesData)
             {
                 foreach (TileData tile in tiles)
                 {
-                    if (tile.IsSelected && tile.ColorID == i)
-                    {
-                        foundTiles.Add(tile);
-                    }
+                    if (tile.IsSelected && tile.ColorID == i) { foundTiles.Add(tile); }
                 }
             }
             return foundTiles;
@@ -97,18 +100,18 @@ namespace LogicPictureLE
 
         private void UpdateLanguage(Lang language)
         {
-            lang = language;
-            switch (lang)
+            _lang = language;
+            switch (_lang)
             {
                 case Lang.EN:
-                    textBlock_LevelTitle.Text = singleLevel.ProjectStoryEN.Title;
-                    tbFinish_LevelDescription.Text = singleLevel.ProjectStoryEN.Description;
-                    button_FianlBacToMenu.Content = "Back To Menu";
+                    textBlock_LevelTitle.Text = _singleLevel.ProjectStoryEN.Title;
+                    tbFinish_LevelDescription.Text = _singleLevel.ProjectStoryEN.Description;
+                    button_FianlBackToMenu.Content = "Back to menu";
                     break;
                 case Lang.PL:
-                    textBlock_LevelTitle.Text = singleLevel.ProjectStoryPL.Title;
-                    tbFinish_LevelDescription.Text = singleLevel.ProjectStoryPL.Description;
-                    button_FianlBacToMenu.Content = "Powrót do Menu";
+                    textBlock_LevelTitle.Text = _singleLevel.ProjectStoryPL.Title;
+                    tbFinish_LevelDescription.Text = _singleLevel.ProjectStoryPL.Description;
+                    button_FianlBackToMenu.Content = "Powrót do menu";
                     break;
                 case Lang.Other:
                     MessageBox.Show("Place for next future language.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -118,372 +121,269 @@ namespace LogicPictureLE
                     break;
             }
         }
-        private void AddHintsToGrid()
+
+        private void UpdateAllHints()
         {
-            gStartHintsHorizontal.ColumnDefinitions.Clear();
-            gEndHintsHorizontal.ColumnDefinitions.Clear();
-            gStartHintsHorizontal.RowDefinitions.Clear();
-            gEndHintsHorizontal.RowDefinitions.Clear();
-            gStartHintsVertical.ColumnDefinitions.Clear();
-            gEndHintsVertical.ColumnDefinitions.Clear();
-            gStartHintsVertical.RowDefinitions.Clear();
-            gEndHintsVertical.RowDefinitions.Clear();
-            ColumnDefinition gridColDefTemp;
+            UpadteHintsOnSingleTab(gStartHintsHorizontal, gStartHintsVertical);
+            UpadteHintsOnSingleTab(gEndHintsHorizontal, gEndHintsVertical);
+        }
+
+        private void UpadteHintsOnSingleTab(Grid hintsHorizontal, Grid hintsVertical)
+        {
+            PrepareHintsHorizontal(hintsHorizontal.ColumnDefinitions, hintsHorizontal.RowDefinitions);
+            FillHintsHorizontal(hintsHorizontal);
+
+            PrepareHintsVerical(hintsVertical.ColumnDefinitions, hintsVertical.RowDefinitions);
+            FillHintsVertical(hintsVertical);
+        }
+
+        private int MaxSizeHints(HintData[][] hintDatas)
+        {
+            return hintDatas.OrderByDescending(list => list.Count()).First().Length;
+        }
+
+        private void PrepareHintsHorizontal(ColumnDefinitionCollection columnDefinitions, RowDefinitionCollection rowDefinitions)
+        {
+            columnDefinitions.Clear();
+
             double spacegrid;
-
-            for (int i = 0; i < singleLevel.LevelData.WidthX; i++)
+            for (int i = 0; i < _singleLevel.LevelData.WidthX; i++)
             {
-                if (i % 5 == 0 && i != 0)
+                if ((i % TILES_GROUP) == 0 && i != 0) { spacegrid = SPACE_MAX; }
+                else { spacegrid = SPACE_MIN; }
+
+                ColumnDefinition cdTemp = new ColumnDefinition() { Width = new GridLength(spacegrid) };
+                columnDefinitions.Add(cdTemp);
+                cdTemp = new ColumnDefinition() { Width = new GridLength(TILE_SIDE) };
+                columnDefinitions.Add(cdTemp);
+                if (i == _singleLevel.LevelData.WidthX - 1)
                 {
-                    spacegrid = 15;
-                }
-                else
-                {
-                    spacegrid = 5;
-                }
-                gridColDefTemp = new ColumnDefinition();
-                gridColDefTemp.Width = new GridLength(spacegrid);
-                gStartHintsHorizontal.ColumnDefinitions.Add(gridColDefTemp);
-                gridColDefTemp = new ColumnDefinition();
-                gridColDefTemp.Width = new GridLength(spacegrid);
-                gEndHintsHorizontal.ColumnDefinitions.Add(gridColDefTemp);
-                gridColDefTemp = new ColumnDefinition();
-                gridColDefTemp.Width = new GridLength(50);
-                gStartHintsHorizontal.ColumnDefinitions.Add(gridColDefTemp);
-                gridColDefTemp = new ColumnDefinition();
-                gridColDefTemp.Width = new GridLength(50);
-                gEndHintsHorizontal.ColumnDefinitions.Add(gridColDefTemp);
-                if (i == singleLevel.LevelData.WidthX - 1)
-                {
-                    gridColDefTemp = new ColumnDefinition();
-                    gridColDefTemp.Width = new GridLength(5);
-                    gStartHintsHorizontal.ColumnDefinitions.Add(gridColDefTemp);
-                    gridColDefTemp = new ColumnDefinition();
-                    gridColDefTemp.Width = new GridLength(5);
-                    gEndHintsHorizontal.ColumnDefinitions.Add(gridColDefTemp);
+                    cdTemp = new ColumnDefinition() { Width = new GridLength(SPACE_MIN) };
+                    columnDefinitions.Add(cdTemp);
                 }
             }
 
-            int maxSizeHintsHorizontalCounts = singleLevel.LevelData.HintsDataHorizontal.OrderByDescending(list => list.Count()).First().Length;
-            RowDefinition gridRowDefTemp;
-            for (int i = 0; i < maxSizeHintsHorizontalCounts; i++)
+            rowDefinitions.Clear();
+            int maxSizeHints = MaxSizeHints(_singleLevel.LevelData.HintsDataHorizontal);
+            for (int i = 0; i < maxSizeHints; i++)
             {
-                gridRowDefTemp = new RowDefinition();
-                gridRowDefTemp.Height = new GridLength(50);
-                gStartHintsHorizontal.RowDefinitions.Add(gridRowDefTemp);
-                gridRowDefTemp = new RowDefinition();
-                gridRowDefTemp.Height = new GridLength(50);
-                gEndHintsHorizontal.RowDefinitions.Add(gridRowDefTemp);
-            }
-            gStartHintsHorizontal.Children.Clear();
-            gEndHintsHorizontal.Children.Clear();
-            for (int i = 0; i < singleLevel.LevelData.WidthX; i++)
-            {
-                for (int j = 0; j < singleLevel.LevelData.HintsDataHorizontal[i].Length; j++)
-                {
-                    TextBlock textBlockHint = new TextBlock();
-                    textBlockHint.Text = singleLevel.LevelData.HintsDataHorizontal[i][j].Value.ToString();
-                    Grid.SetColumn(textBlockHint, 2 * i + 1);
-                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts - singleLevel.LevelData.HintsDataHorizontal[i].Length + j);
-                    byte byteResult = singleLevel.LevelData.HintsDataHorizontal[i][j].ColorID;
-                    textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
-                    textBlockHint.FontSize = 35;
-                    textBlockHint.FontWeight = FontWeights.Bold;
-                    textBlockHint.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBlockHint.VerticalAlignment = VerticalAlignment.Center;
-                    gStartHintsHorizontal.Children.Add(textBlockHint);
-                    textBlockHint = new TextBlock();
-                    textBlockHint.Text = singleLevel.LevelData.HintsDataHorizontal[i][j].Value.ToString();
-                    Grid.SetColumn(textBlockHint, 2 * i + 1);
-                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts - singleLevel.LevelData.HintsDataHorizontal[i].Length + j);
-                    byteResult = singleLevel.LevelData.HintsDataHorizontal[i][j].ColorID;
-                    textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
-                    textBlockHint.FontSize = 35;
-                    textBlockHint.FontWeight = FontWeights.Bold;
-                    textBlockHint.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBlockHint.VerticalAlignment = VerticalAlignment.Center;
-                    gEndHintsHorizontal.Children.Add(textBlockHint);
-                }
-                if(singleLevel.LevelData.HintsDataHorizontal[i].Length == 0)
-                {
-                    TextBlock textBlockHint = new TextBlock();
-                    textBlockHint.Text = "0";
-                    Grid.SetColumn(textBlockHint, 2 * i + 1);
-                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts);
-                    textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataNeutral));
-                    textBlockHint.FontSize = 35;
-                    textBlockHint.FontWeight = FontWeights.Bold;
-                    textBlockHint.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBlockHint.VerticalAlignment = VerticalAlignment.Center;
-                    gStartHintsHorizontal.Children.Add(textBlockHint);
-                    textBlockHint = new TextBlock();
-                    textBlockHint.Text = "0";
-                    Grid.SetColumn(textBlockHint, 2 * i + 1);
-                    Grid.SetRow(textBlockHint, maxSizeHintsHorizontalCounts);
-                    textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataNeutral));
-                    textBlockHint.FontSize = 35;
-                    textBlockHint.FontWeight = FontWeights.Bold;
-                    textBlockHint.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBlockHint.VerticalAlignment = VerticalAlignment.Center;
-                    gEndHintsHorizontal.Children.Add(textBlockHint);
-                }
-            }
-
-            int maxSizeHintsVerticalCounts = singleLevel.LevelData.HintsDataVertical.OrderByDescending(list => list.Count()).First().Length;
-            for (int i = 0; i < maxSizeHintsVerticalCounts; i++)
-            {
-                gridColDefTemp = new ColumnDefinition();
-                gridColDefTemp.Width = new GridLength(50);
-                gStartHintsVertical.ColumnDefinitions.Add(gridColDefTemp);
-                gridColDefTemp = new ColumnDefinition();
-                gridColDefTemp.Width = new GridLength(50);
-                gEndHintsVertical.ColumnDefinitions.Add(gridColDefTemp);
-            }
-            for (int i = 0; i < singleLevel.LevelData.HeightY; i++)
-            {
-                if ((i - offsetY) % 5 == 0 && i != 0)
-                {
-                    spacegrid = 15;
-                }
-                else
-                {
-                    spacegrid = 5;
-                }
-                gridRowDefTemp = new RowDefinition();
-                gridRowDefTemp.Height = new GridLength(spacegrid);
-                gStartHintsVertical.RowDefinitions.Add(gridRowDefTemp);
-                gridRowDefTemp = new RowDefinition();
-                gridRowDefTemp.Height = new GridLength(spacegrid);
-                gEndHintsVertical.RowDefinitions.Add(gridRowDefTemp);
-                gridRowDefTemp = new RowDefinition();
-                gridRowDefTemp.Height = new GridLength(50);
-                gStartHintsVertical.RowDefinitions.Add(gridRowDefTemp);
-                gridRowDefTemp = new RowDefinition();
-                gridRowDefTemp.Height = new GridLength(50);
-                gEndHintsVertical.RowDefinitions.Add(gridRowDefTemp);
-                if (i == singleLevel.LevelData.HeightY - 1)
-                {
-                    gridRowDefTemp = new RowDefinition();
-                    gridRowDefTemp.Height = new GridLength(5);
-                    gStartHintsVertical.RowDefinitions.Add(gridRowDefTemp);
-                    gridRowDefTemp = new RowDefinition();
-                    gridRowDefTemp.Height = new GridLength(5);
-                    gEndHintsVertical.RowDefinitions.Add(gridRowDefTemp);
-                }
-            }
-
-            gStartHintsVertical.Children.Clear();
-            gEndHintsVertical.Children.Clear();
-            for (int j = 0; j < singleLevel.LevelData.HeightY; j++)
-            {
-                for (int i = 0; i < singleLevel.LevelData.HintsDataVertical[j].Length; i++)
-                {
-                    TextBlock textBlockHint = new TextBlock();
-                    textBlockHint.Text = singleLevel.LevelData.HintsDataVertical[j][i].Value.ToString();
-                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts - singleLevel.LevelData.HintsDataVertical[j].Length + i);
-                    Grid.SetRow(textBlockHint, 2 * ((int)singleLevel.LevelData.HeightY - j - 1) + 1);
-                    byte byteResult = singleLevel.LevelData.HintsDataVertical[j][i].ColorID;
-                    textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
-                    textBlockHint.FontSize = 35;
-                    textBlockHint.FontWeight = FontWeights.Bold;
-                    textBlockHint.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBlockHint.VerticalAlignment = VerticalAlignment.Center;
-                    gStartHintsVertical.Children.Add(textBlockHint);
-                    textBlockHint = new TextBlock();
-                    textBlockHint.Text = singleLevel.LevelData.HintsDataVertical[j][i].Value.ToString();
-                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts - singleLevel.LevelData.HintsDataVertical[j].Length + i);
-                    Grid.SetRow(textBlockHint, 2 * (singleLevel.LevelData.HeightY - j - 1) + 1);
-                    byteResult = singleLevel.LevelData.HintsDataVertical[j][i].ColorID;
-                    textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[byteResult]));
-                    textBlockHint.FontSize = 35;
-                    textBlockHint.FontWeight = FontWeights.Bold;
-                    textBlockHint.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBlockHint.VerticalAlignment = VerticalAlignment.Center;
-                    gEndHintsVertical.Children.Add(textBlockHint);
-                }
-                if (singleLevel.LevelData.HintsDataVertical[j].Length == 0)
-                {
-                    TextBlock textBlockHint = new TextBlock();
-                    textBlockHint.Text = "0";
-                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts);
-                    Grid.SetRow(textBlockHint, 2 * ((int)singleLevel.LevelData.HeightY - j - 1) + 1);
-                    textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataNeutral));
-                    textBlockHint.FontSize = 35;
-                    textBlockHint.FontWeight = FontWeights.Bold;
-                    textBlockHint.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBlockHint.VerticalAlignment = VerticalAlignment.Center;
-                    gStartHintsVertical.Children.Add(textBlockHint);
-                    textBlockHint = new TextBlock();
-                    textBlockHint.Text = "0";
-                    Grid.SetColumn(textBlockHint, maxSizeHintsVerticalCounts);
-                    Grid.SetRow(textBlockHint, 2 * (singleLevel.LevelData.HeightY - j - 1) + 1);
-                    textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataNeutral));
-                    textBlockHint.FontSize = 35;
-                    textBlockHint.FontWeight = FontWeights.Bold;
-                    textBlockHint.HorizontalAlignment = HorizontalAlignment.Center;
-                    textBlockHint.VerticalAlignment = VerticalAlignment.Center;
-                    gEndHintsVertical.Children.Add(textBlockHint);
-                }
+                RowDefinition rdTemp = new RowDefinition() { Height = new GridLength(TILE_SIDE) };
+                rowDefinitions.Add(rdTemp);
             }
         }
-        private void UpdatesGridsLayoutOfPicture()
+
+        private void FillHintsHorizontal(Grid hintsHorizontal)
         {
-            gStartPicture.RowDefinitions.Clear();
-            gStartPicture.ColumnDefinitions.Clear();
-            gEndPic.RowDefinitions.Clear();
-            gEndPic.ColumnDefinitions.Clear();
-            ColumnDefinition gridColTemp;
-            double spacegrid;
-            for (int i = 0; i < singleLevel.LevelData.WidthX; i++)
+            hintsHorizontal.Children.Clear();
+
+            int maxSizeHints = MaxSizeHints(_singleLevel.LevelData.HintsDataHorizontal);
+            for (int i = 0; i < _singleLevel.LevelData.WidthX; i++)
             {
-                if (i % 5 == 0 && i != 0)
+                for (int j = 0; j < _singleLevel.LevelData.HintsDataHorizontal[i].Length; j++)
                 {
-                    spacegrid = 15;
-                }
-                else
-                {
-                    spacegrid = 5;
-                }
-                gridColTemp = new ColumnDefinition();
-                gridColTemp.Width = new GridLength(spacegrid);
-                gStartPicture.ColumnDefinitions.Add(gridColTemp);
-                gridColTemp = new ColumnDefinition();
-                gridColTemp.Width = new GridLength(spacegrid);
-                gEndPic.ColumnDefinitions.Add(gridColTemp);
-                gridColTemp = new ColumnDefinition();
-                gridColTemp.Width = new GridLength(50);
-                gStartPicture.ColumnDefinitions.Add(gridColTemp);
-                gridColTemp = new ColumnDefinition();
-                gridColTemp.Width = new GridLength(50);
-                gEndPic.ColumnDefinitions.Add(gridColTemp);
-                if (i == singleLevel.LevelData.WidthX - 1)
-                {
-                    gridColTemp = new ColumnDefinition();
-                    gridColTemp.Width = new GridLength(5);
-                    gStartPicture.ColumnDefinitions.Add(gridColTemp);
-                    gridColTemp = new ColumnDefinition();
-                    gridColTemp.Width = new GridLength(5);
-                    gEndPic.ColumnDefinitions.Add(gridColTemp);
-                }
-            }
-            RowDefinition gridRowTemp;
-            for (int i = 0; i < singleLevel.LevelData.HeightY; i++)
-            {
-                if ((i - offsetY) % 5 == 0 && i != 0)
-                {
-                    spacegrid = 15;
-                }
-                else
-                {
-                    spacegrid = 5;
-                }
-                gridRowTemp = new RowDefinition();
-                gridRowTemp.Height = new GridLength(spacegrid);
-                gStartPicture.RowDefinitions.Add(gridRowTemp);
-                gridRowTemp = new RowDefinition();
-                gridRowTemp.Height = new GridLength(spacegrid);
-                gEndPic.RowDefinitions.Add(gridRowTemp);
-                gridRowTemp = new RowDefinition();
-                gridRowTemp.Height = new GridLength(50);
-                gStartPicture.RowDefinitions.Add(gridRowTemp);
-                gridRowTemp = new RowDefinition();
-                gridRowTemp.Height = new GridLength(50);
-                gEndPic.RowDefinitions.Add(gridRowTemp);
-                if (i == singleLevel.LevelData.HeightY - 1)
-                {
-                    gridRowTemp = new RowDefinition();
-                    gridRowTemp.Height = new GridLength(5);
-                    gStartPicture.RowDefinitions.Add(gridRowTemp);
-                    gridRowTemp = new RowDefinition();
-                    gridRowTemp.Height = new GridLength(5);
-                    gEndPic.RowDefinitions.Add(gridRowTemp);
-                }
-            }
-        }
-        private void AddCellsToGrids()
-        {
-            gStartPicture.Children.Clear();
-            gEndPic.Children.Clear();
-            Rectangle rectangleMark = new Rectangle();
-            rectangleMark.HorizontalAlignment = HorizontalAlignment.Stretch;
-            rectangleMark.VerticalAlignment = VerticalAlignment.Stretch;
-            Grid.SetColumn(rectangleMark, 0);
-            Grid.SetRow(rectangleMark, 2 * (singleLevel.LevelData.HeightY - 1));
-            Grid.SetColumnSpan(rectangleMark, 3);
-            Grid.SetRowSpan(rectangleMark, 3);
-            rectangleMark.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataMarker));
-            gStartPicture.Children.Add(rectangleMark);
-            rectangleMark = new Rectangle();
-            rectangleMark.HorizontalAlignment = HorizontalAlignment.Stretch;
-            rectangleMark.VerticalAlignment = VerticalAlignment.Stretch;
-            Grid.SetColumn(rectangleMark, 0);
-            Grid.SetRow(rectangleMark, 2 * (singleLevel.LevelData.HeightY - 1));
-            Grid.SetColumnSpan(rectangleMark, 3);
-            Grid.SetRowSpan(rectangleMark, 3);
-            rectangleMark.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataMarker));
-            gEndPic.Children.Add(rectangleMark);
-            Rectangle rectangleTempStart;
-            Rectangle rectangleTempEnd;
-            for (int x = 0; x < singleLevel.LevelData.WidthX; x++)
-            {
-                for (int y = 0; y < singleLevel.LevelData.HeightY; y++)
-                {
-                    rectangleTempStart = new Rectangle();
-                    rectangleTempEnd = new Rectangle();
-                    rectangleTempStart.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    rectangleTempEnd.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    rectangleTempStart.VerticalAlignment = VerticalAlignment.Stretch;
-                    rectangleTempEnd.VerticalAlignment = VerticalAlignment.Stretch;
-                    Grid.SetColumn(rectangleTempStart, 2 * x + 1);
-                    Grid.SetColumn(rectangleTempEnd, 2 * x + 1);
-                    Grid.SetRow(rectangleTempStart, 2 * ((singleLevel.LevelData.HeightY - 1) - y) + 1);
-                    Grid.SetRow(rectangleTempEnd, 2 * ((singleLevel.LevelData.HeightY - 1) - y) + 1);
-                    rectangleTempStart.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataNeutral));
-                    TileData tileData = singleLevel.LevelData.TilesData[x][y];
-                    if (tileData.IsSelected)
+                    TextBlock textBlockHint = new TextBlock()
                     {
-                        rectangleTempEnd.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorsDataTiles[tileData.ColorID]));
+                        Text = _singleLevel.LevelData.HintsDataHorizontal[i][j].Value.ToString(),
+                        FontSize = FONT_SIZE,
+                        FontWeight = FontWeights.Bold,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    Grid.SetColumn(textBlockHint, 2 * i + 1);
+                    Grid.SetRow(textBlockHint, maxSizeHints - _singleLevel.LevelData.HintsDataHorizontal[i].Length + j);
+                    if (_singleLevel.LevelData.HintsDataHorizontal[i][j].Value != 0)
+                    {
+                        byte colorID = _singleLevel.LevelData.HintsDataHorizontal[i][j].ColorID;
+                        textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(_singleLevel.LevelData.ColorsDataTiles[colorID]));
                     }
                     else
                     {
-                        rectangleTempEnd.Fill = new SolidColorBrush(GetColorFromColorData(singleLevel.LevelData.ColorDataNeutral));
+                        textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(_singleLevel.LevelData.ColorDataNeutral));
                     }
-                    gStartPicture.Children.Add(rectangleTempStart);
-                    gEndPic.Children.Add(rectangleTempEnd);
+                    hintsHorizontal.Children.Add(textBlockHint);
                 }
             }
         }
+
+        private void PrepareHintsVerical(ColumnDefinitionCollection columnDefinitions, RowDefinitionCollection rowDefinitions)
+        {
+            columnDefinitions.Clear();
+            rowDefinitions.Clear();
+
+            int maxSizeHints = MaxSizeHints(_singleLevel.LevelData.HintsDataVertical);
+            double spacegrid;
+            for (int i = 0; i < maxSizeHints; i++)
+            {
+                ColumnDefinition cdTemp = new ColumnDefinition() { Width = new GridLength(TILE_SIDE) };
+                columnDefinitions.Add(cdTemp);
+            }
+
+            for (int i = 0; i < _singleLevel.LevelData.HeightY; i++)
+            {
+                if ((i - _offsetY) % TILES_GROUP == 0 && i != 0) spacegrid = SPACE_MAX;
+                else spacegrid = SPACE_MIN;
+
+                RowDefinition rdTemp = new RowDefinition() { Height = new GridLength(spacegrid) };
+                rowDefinitions.Add(rdTemp);
+                rdTemp = new RowDefinition() { Height = new GridLength(TILE_SIDE) };
+                rowDefinitions.Add(rdTemp);
+                if (i == _singleLevel.LevelData.HeightY - 1)
+                {
+                    rdTemp = new RowDefinition() { Height = new GridLength(SPACE_MIN) };
+                    rowDefinitions.Add(rdTemp);
+                }
+            }
+        }
+       
+        private void FillHintsVertical(Grid hintsVertical)
+        {
+            hintsVertical.Children.Clear();
+
+            int maxSizeHints = MaxSizeHints(_singleLevel.LevelData.HintsDataVertical);
+            for (int j = 0; j < _singleLevel.LevelData.HeightY; j++)
+            {
+                for (int i = 0; i < _singleLevel.LevelData.HintsDataVertical[j].Length; i++)
+                {
+                    TextBlock textBlockHint = new TextBlock()
+                    {
+                        Text = _singleLevel.LevelData.HintsDataVertical[j][i].Value.ToString(),
+                        FontSize = FONT_SIZE, FontWeight = FontWeights.Bold,
+                        HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
+                };
+                    Grid.SetColumn(textBlockHint, maxSizeHints - _singleLevel.LevelData.HintsDataVertical[j].Length + i);
+                    Grid.SetRow(textBlockHint, 2 * ((int)_singleLevel.LevelData.HeightY - j - 1) + 1);
+                    if (_singleLevel.LevelData.HintsDataVertical[j][i].Value != 0)
+                    {
+                        byte colorId = _singleLevel.LevelData.HintsDataVertical[j][i].ColorID;
+                        textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(_singleLevel.LevelData.ColorsDataTiles[colorId]));
+                    }
+                    else
+                    {
+                        textBlockHint.Foreground = new SolidColorBrush(GetColorFromColorData(_singleLevel.LevelData.ColorDataNeutral));
+                    }
+                    hintsVertical.Children.Add(textBlockHint);
+                }
+            }
+        }
+
+        private void UpadteTilesDataGrids()
+        {
+            PrepareGridTilesData(gStartPicture.ColumnDefinitions, gStartPicture.RowDefinitions);
+            FillTilesDataInGrid(gStartPicture, false);
+
+            PrepareGridTilesData(gEndPicture.ColumnDefinitions, gEndPicture.RowDefinitions);
+            FillTilesDataInGrid(gEndPicture, true);
+        }
+
+        private void PrepareGridTilesData(ColumnDefinitionCollection columnDefinitions, RowDefinitionCollection rowDefinitions)
+        {
+            double spacegrid;
+
+            columnDefinitions.Clear();
+            for (int i = 0; i < _singleLevel.LevelData.WidthX; i++)
+            {
+                if (i % TILES_GROUP == 0 && i != 0) spacegrid = SPACE_MAX;
+                else spacegrid = SPACE_MIN;
+
+                ColumnDefinition cdTemp = new ColumnDefinition() { Width = new GridLength(spacegrid) };
+                columnDefinitions.Add(cdTemp);
+                cdTemp = new ColumnDefinition() { Width = new GridLength(TILE_SIDE) };
+                columnDefinitions.Add(cdTemp);
+                if (i == _singleLevel.LevelData.WidthX - 1)
+                {
+                    cdTemp = new ColumnDefinition() { Width = new GridLength(SPACE_MIN) };
+                    columnDefinitions.Add(cdTemp);
+                }
+            }
+
+            rowDefinitions.Clear();
+            for (int i = 0; i < _singleLevel.LevelData.HeightY; i++)
+            {
+                if ((i - _offsetY) % TILES_GROUP == 0 && i != 0) spacegrid = SPACE_MAX;
+                else spacegrid = SPACE_MIN;
+
+                RowDefinition rdTemp = new RowDefinition() { Height = new GridLength(spacegrid) };
+                rowDefinitions.Add(rdTemp);
+                rdTemp = new RowDefinition() { Height = new GridLength(TILE_SIDE) };
+                rowDefinitions.Add(rdTemp);
+                if (i == _singleLevel.LevelData.HeightY - 1)
+                {
+                    rdTemp = new RowDefinition() { Height = new GridLength(SPACE_MIN) };
+                    rowDefinitions.Add(rdTemp);
+                }
+            }
+        }
+
+        private void FillTilesDataInGrid(Grid tilesDataGrid, bool isEnd)
+        {
+            tilesDataGrid.Children.Clear();
+
+            Rectangle rectangleMark = new Rectangle()
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch,
+                Fill = new SolidColorBrush(GetColorFromColorData(_singleLevel.LevelData.ColorDataMarker))
+            };
+            Grid.SetColumn(rectangleMark, 0);
+            Grid.SetRow(rectangleMark, 2 * (_singleLevel.LevelData.HeightY - 1));
+            Grid.SetColumnSpan(rectangleMark, 3);
+            Grid.SetRowSpan(rectangleMark, 3);
+            tilesDataGrid.Children.Add(rectangleMark);
+
+            for (int x = 0; x < _singleLevel.LevelData.WidthX; x++)
+            {
+                for (int y = 0; y < _singleLevel.LevelData.HeightY; y++)
+                {
+                    Rectangle rTemp = new Rectangle()
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch
+                    };
+                    Grid.SetColumn(rTemp, 2 * x + 1);
+                    Grid.SetRow(rTemp, 2 * ((_singleLevel.LevelData.HeightY - 1) - y) + 1);
+                    TileData tileData = _singleLevel.LevelData.TilesData[x][y];
+                    if (tileData.IsSelected && isEnd)
+                    {
+                        rTemp.Fill = new SolidColorBrush(GetColorFromColorData(_singleLevel.LevelData.ColorsDataTiles[tileData.ColorID]));
+                    }
+                    else
+                    {
+                        rTemp.Fill = new SolidColorBrush(GetColorFromColorData(_singleLevel.LevelData.ColorDataNeutral));
+                    }
+                    tilesDataGrid.Children.Add(rTemp);
+                }
+            }
+        }
+
         private void UpadteFinalPicture()
         {
             iFinal.Source = GetLevelPicture();
         }
         public WriteableBitmap GetLevelPicture()
         {
-            WriteableBitmap writeableBitmap = new WriteableBitmap(singleLevel.LevelData.WidthX, singleLevel.LevelData.HeightY, 96, 96, PixelFormats.Bgra32, null);
-            byte[] pixels1d = new byte[singleLevel.LevelData.HeightY * singleLevel.LevelData.WidthX * 4];
+            WriteableBitmap writeableBitmap = new WriteableBitmap(_singleLevel.LevelData.WidthX, _singleLevel.LevelData.HeightY, 96, 96, PixelFormats.Bgra32, null);
+            byte[] pixels1d = new byte[_singleLevel.LevelData.HeightY * _singleLevel.LevelData.WidthX * 4];
             int index = 0;
-            for (int vertical = 0; vertical < singleLevel.LevelData.HeightY; vertical++)
+            for (int vertical = 0; vertical < _singleLevel.LevelData.HeightY; vertical++)
             {
-                for (int horizontal = 0; horizontal < singleLevel.LevelData.WidthX; horizontal++)
+                for (int horizontal = 0; horizontal < _singleLevel.LevelData.WidthX; horizontal++)
                 {
-                    TileData tileDataFound = singleLevel.LevelData.TilesData[horizontal][singleLevel.LevelData.HeightY - vertical - 1];
+                    TileData tileDataFound = _singleLevel.LevelData.TilesData[horizontal][_singleLevel.LevelData.HeightY - vertical - 1];
                     if (tileDataFound.IsSelected)
                     {
-                        pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Blue;
-                        pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Green;
-                        pixels1d[index++] = singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Red;
+                        pixels1d[index++] = _singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Blue;
+                        pixels1d[index++] = _singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Green;
+                        pixels1d[index++] = _singleLevel.LevelData.ColorsDataTiles[tileDataFound.ColorID].Red;
                     }
                     else
                     {
-                        pixels1d[index++] = singleLevel.LevelData.ColorDataNeutral.Blue;
-                        pixels1d[index++] = singleLevel.LevelData.ColorDataNeutral.Green;
-                        pixels1d[index++] = singleLevel.LevelData.ColorDataNeutral.Red;
+                        pixels1d[index++] = _singleLevel.LevelData.ColorDataNeutral.Blue;
+                        pixels1d[index++] = _singleLevel.LevelData.ColorDataNeutral.Green;
+                        pixels1d[index++] = _singleLevel.LevelData.ColorDataNeutral.Red;
                     }
                     pixels1d[index++] = 255;
                 }
             }
-            Int32Rect rect = new Int32Rect(0, 0, singleLevel.LevelData.WidthX, singleLevel.LevelData.HeightY);
-            int stride = 4 * singleLevel.LevelData.WidthX;
+            Int32Rect rect = new Int32Rect(0, 0, _singleLevel.LevelData.WidthX, _singleLevel.LevelData.HeightY);
+            int stride = 4 * _singleLevel.LevelData.WidthX;
             writeableBitmap.WritePixels(rect, pixels1d, stride, 0);
             return writeableBitmap;
         }

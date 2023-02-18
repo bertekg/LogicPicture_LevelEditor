@@ -11,6 +11,7 @@ using LogicPictureLE.UserControls;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace LogicPictureLE
 {
@@ -205,7 +206,7 @@ namespace LogicPictureLE
             {
                 int previousColorId = -1;
                 byte currentIdCombo = 0;
-                List<HintData> lVerticalNumberHints = new List<HintData>();
+                List<HintData> verticalHints = new List<HintData>();
                 for (byte x = 0; x < singleLevel.LevelData.WidthX; x++)
                 {                  
                     TileData tileDataFound = singleLevel.LevelData.TilesData[x][y];
@@ -220,7 +221,7 @@ namespace LogicPictureLE
                             HintData hdTemp = new HintData();
                             hdTemp.ColorID = (byte)previousColorId;
                             hdTemp.Value = currentIdCombo;
-                            lVerticalNumberHints.Add(hdTemp);
+                            verticalHints.Add(hdTemp);
                             currentIdCombo = 1;
                         }
                         else
@@ -236,7 +237,7 @@ namespace LogicPictureLE
                             HintData hdTemp = new HintData();
                             hdTemp.ColorID = (byte)previousColorId;
                             hdTemp.Value = currentIdCombo;
-                            lVerticalNumberHints.Add(hdTemp);
+                            verticalHints.Add(hdTemp);
                             currentIdCombo = 0;
                             previousColorId = -1;
                         }
@@ -247,9 +248,13 @@ namespace LogicPictureLE
                     HintData hdTemp = new HintData();
                     hdTemp.ColorID = (byte)(previousColorId);
                     hdTemp.Value = currentIdCombo;
-                    lVerticalNumberHints.Add(hdTemp);
+                    verticalHints.Add(hdTemp);
                 }
-                singleLevel.LevelData.HintsDataVertical[y] = ConvertListToArray(lVerticalNumberHints);
+                if (verticalHints.Count == 0)
+                {
+                    verticalHints.Add(new HintData(0, 0));
+                }
+                singleLevel.LevelData.HintsDataVertical[y] = ConvertListToArray(verticalHints);
             }
 
             singleLevel.LevelData.HintsDataHorizontal = new HintData[singleLevel.LevelData.WidthX][];
@@ -257,7 +262,7 @@ namespace LogicPictureLE
             {
                 int prevCellId = -1;
                 byte currentIdCombo = 0;
-                List<HintData> hints = new List<HintData>();
+                List<HintData> horizontalHints = new List<HintData>();
                 for (byte y = singleLevel.LevelData.HeightY; y > 0; y--)
                 {
                     TileData tileDataFound = singleLevel.LevelData.TilesData[x][y -1];
@@ -272,7 +277,7 @@ namespace LogicPictureLE
                             HintData hint = new HintData();
                             hint.ColorID = (byte)(prevCellId);
                             hint.Value = currentIdCombo;
-                            hints.Add(hint);
+                            horizontalHints.Add(hint);
                             currentIdCombo = 1;
                         }
                         else
@@ -288,7 +293,7 @@ namespace LogicPictureLE
                             HintData hdTemp = new HintData();
                             hdTemp.ColorID = (byte)(prevCellId);
                             hdTemp.Value = currentIdCombo;
-                            hints.Add(hdTemp);
+                            horizontalHints.Add(hdTemp);
                             currentIdCombo = 0;
                             prevCellId = -1;
                         }
@@ -299,11 +304,13 @@ namespace LogicPictureLE
                     HintData hdTemp = new HintData();
                     hdTemp.ColorID = (byte)(prevCellId);
                     hdTemp.Value = currentIdCombo;
-                    hints.Add(hdTemp);
-                    currentIdCombo = 0;
-                    prevCellId = 0;
+                    horizontalHints.Add(hdTemp);
                 }
-                singleLevel.LevelData.HintsDataHorizontal[x] = ConvertListToArray(hints);
+                if (horizontalHints.Count == 0)
+                {
+                    horizontalHints.Add(new HintData(0, 0));
+                }
+                singleLevel.LevelData.HintsDataHorizontal[x] = ConvertListToArray(horizontalHints);
             }
         }
 

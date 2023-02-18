@@ -1,32 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 
 namespace LogicPictureLE.UserControls
 {
-    /// <summary>
-    /// Logika interakcji dla klasy SingleLevelEditor.xaml
-    /// </summary>
     public partial class SingleLevelEditor : UserControl
     {
         SingleLevel singleLevel;
         LevelEditor levelEditor;
+        bool afterInitial = false;
         public SingleLevelEditor(SingleLevel levelData)
         {
             InitializeComponent();
             singleLevel = levelData;
             LoadLevelData();
+            afterInitial = true;
         }
         private void LoadLevelData()
         {
@@ -50,6 +36,30 @@ namespace LogicPictureLE.UserControls
             singleLevel.ProjectStoryEN.Description = textBox_ProjectDescriptionEnglish.Text;
             singleLevel.ProjectStoryPL.Title = textBox_ProjectTitlePolish.Text;
             singleLevel.ProjectStoryPL.Description = textBox_ProjectDescriptionPolish.Text;
+        }
+
+        private void textBox_ProjectTitleEnglish_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(afterInitial) 
+                singleLevel.ProjectStoryEN.Title = textBox_ProjectTitleEnglish.Text;
+        }
+
+        private void textBox_ProjectTitlePolish_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (afterInitial)
+                singleLevel.ProjectStoryPL.Title = textBox_ProjectTitlePolish.Text;
+        }
+
+        private void textBox_ProjectDescriptionEnglish_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (afterInitial)
+                singleLevel.ProjectStoryEN.Description = textBox_ProjectDescriptionEnglish.Text;
+        }
+
+        private void textBox_ProjectDescriptionPolish_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (afterInitial)
+                singleLevel.ProjectStoryPL.Description = textBox_ProjectDescriptionPolish.Text;
         }
     }
 }

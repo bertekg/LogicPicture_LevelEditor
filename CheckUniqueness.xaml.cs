@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -94,7 +93,6 @@ namespace LogicPictureLE
                         sum++;
                     }
                 }
-                int left = width - sum;
 
                 int[] startsInitialIndex = new int[hints.Length];
                 int flyIndex = 0;
@@ -108,7 +106,7 @@ namespace LogicPictureLE
                 bool looping = true;
                 while (looping)
                 {
-                    if (startsInitialIndex.Length <= 0) 
+                    if (startsInitialIndex.Length <= 0 || hints[0].Value == 0) 
                     {
                         Iteration iterationZero = new Iteration();
                         bool[] cellsZero = new bool[width];

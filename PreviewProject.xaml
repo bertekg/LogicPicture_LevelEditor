@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LogicPictureLE"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        mc:Ignorable="d" Name="Window_PrevieProject"
+        mc:Ignorable="d"
         Title="Preview Project" Width="1280" Height="720" >
     <TabControl>
         <TabItem Header="Basic info">
@@ -198,7 +197,7 @@
                         <TextBlock Text="1" Grid.Row="3" Grid.Column="0" Foreground="Blue" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <TextBlock Text="1" Grid.Row="3" Grid.Column="1" Foreground="Yellow" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </Grid>
-                    <Grid Name="gEndPic" Grid.Row="1" Grid.Column="1" Background="Black">
+                    <Grid Name="gEndPicture" Grid.Row="1" Grid.Column="1" Background="Black">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="5"/>
                             <RowDefinition Height="50"/>
@@ -278,7 +277,7 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="50"/>
                                     </Grid.RowDefinitions>
-                                    <Button Name="button_FianlBacToMenu" Content="Back To Menu" Grid.Row="0" Grid.Column="0" FontSize="35" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
+                                    <Button Name="button_FianlBackToMenu" Content="Back to menu" Grid.Row="0" Grid.Column="0" FontSize="35" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2"/>
                                 </Grid>
                             </Viewbox>
                         </Grid>

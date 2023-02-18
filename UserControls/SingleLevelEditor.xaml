@@ -36,10 +36,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Title:" Grid.Row="0" Grid.Column="0"/>
                                     <TextBox Name="textBox_ProjectTitleEnglish" Text="SampleNameEN" 
-                                 Grid.Row="0" Grid.Column="1" Margin="5"/>
+                                             TextChanged="textBox_ProjectTitleEnglish_TextChanged" 
+                                             Grid.Row="0" Grid.Column="1" Margin="5"/>
                                 </Grid>
                                 <TextBlock Text="Description:" Grid.Row="0" Grid.Column="0"/>
                                 <TextBox Name="textBox_ProjectDescriptionEnglish" TextWrapping="Wrap"
+                                         TextChanged="textBox_ProjectDescriptionEnglish_TextChanged"
                                          VerticalScrollBarVisibility="Auto" AcceptsReturn="True"
                                          SpellCheck.IsEnabled="True" Language="en-US"/>
                             </StackPanel>
@@ -53,10 +55,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Title:" Grid.Row="1" Grid.Column="0"/>
                                     <TextBox Name="textBox_ProjectTitlePolish" Text="SampleNamePL"
+                                             TextChanged="textBox_ProjectTitlePolish_TextChanged"
                                              Grid.Row="1" Grid.Column="1" Margin="5"/>
                                 </Grid>
                                 <TextBlock Text="Description:" Grid.Row="0" Grid.Column="0"/>
                                 <TextBox Name="textBox_ProjectDescriptionPolish" TextWrapping="Wrap"
+                                         TextChanged="textBox_ProjectDescriptionPolish_TextChanged"
                                          VerticalScrollBarVisibility="Auto" AcceptsReturn="True"
                                          SpellCheck.IsEnabled="True" Language="pl-PL"/>
                             </StackPanel>
