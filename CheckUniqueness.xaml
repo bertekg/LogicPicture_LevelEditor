@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Check Uniqueness" Height="450" Width="800" KeyDown="Window_KeyDown">
+        Title="Check Uniqueness" Height="600" Width="1200" KeyDown="Window_KeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,10 +15,52 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <GroupBox Header="Created single level view" Name="createdLevelView"/>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+            <GroupBox Header="Iteration Information" Grid.Column="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Vertical hints iteration total" Margin="5"/>
+                            <TextBox Name="textBox_VerticalHintsIterationTotal" Text="Nothing" IsReadOnly="True" Grid.Column="1" Margin="5"/>
+                        </Grid>
+                        <GroupBox Name="VerticalHintsIteration" Header="Vertical hints TreeView" Grid.Row="1"/>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Horizontal hints iteration total" Margin="5"/>
+                            <TextBox Name="textBox_HorizontalHintsIterationTotal" Text="Nothing" IsReadOnly="True" Grid.Column="1" Margin="5"/>
+                        </Grid>
+                        <GroupBox Name="HorizontalHintsIteration" Header="Horizontal hints TreeView" Grid.Row="1"/>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+            <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"/>
+            <GroupBox Header="Detected possible solution" Grid.Column="4"/>
         </Grid>
     </Grid>
 </Window>

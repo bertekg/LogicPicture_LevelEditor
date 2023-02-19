@@ -1,7 +1,7 @@
 ﻿using LogicPictureLE.UserControls;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace LogicPictureLE
@@ -9,6 +9,7 @@ namespace LogicPictureLE
     public partial class CheckUniqueness : Window
     {
         SingleLevel _singleLevel;
+        List<List<Iteration>> _rowIterations, _columnIterations;
 
         public CheckUniqueness()
         {
@@ -33,28 +34,46 @@ namespace LogicPictureLE
 
         private void ButtonFunction()
         {
-            List<List<Iteration>> rowIterations = CalcRowsNeedIteration();
+            _rowIterations = CalcLinesNeedIteration(_singleLevel.LevelData.HintsDataVertical);
+            int totalVerticalPossibilities = UpdateIteration(_rowIterations, _singleLevel.LevelData.HintsDataVertical, VerticalHintsIteration, "Row");
+            textBox_VerticalHintsIterationTotal.Text = totalVerticalPossibilities.ToString();
+
+            _columnIterations = CalcLinesNeedIteration(_singleLevel.LevelData.HintsDataHorizontal);
+            int totalHorizontalPossibilities = UpdateIteration(_columnIterations, _singleLevel.LevelData.HintsDataHorizontal, HorizontalHintsIteration, "Column");
+            textBox_HorizontalHintsIterationTotal.Text = totalHorizontalPossibilities.ToString();
+        }
+
+        private int UpdateIteration(List<List<Iteration>> allIterations, HintData[][] hintDatas, GroupBox displayGorupBox, string nameType)
+        {
+            TreeView treeView = new TreeView();
             int totalPossibilities = 1;
-            for (int i = 0; i < rowIterations.Count; i++)
+            for (int i = 0; i < allIterations.Count; i++)
             {
-                Debug.Write($"Row {i}, contains {rowIterations[i].Count} iterations, Valuse:");
-                totalPossibilities *= rowIterations[i].Count;
-                for (int j = 0; j < _singleLevel.LevelData.HintsDataVertical[i].Length; j++)
+                TreeViewItem lineLevel = new TreeViewItem();
+                string headerLine = $"{nameType} {i + 1}, contains {allIterations[i].Count} iterations, Valuses:";
+                totalPossibilities *= allIterations[i].Count;
+                for (int j = 0; j < hintDatas[i].Length; j++)
                 {
-                    Debug.Write($" {_singleLevel.LevelData.HintsDataVertical[i][j].Value}");
+                    headerLine += $" {hintDatas[i][j].Value}";
                 }
-                Debug.WriteLine(".");
-                for (int j = 0; j < rowIterations[i].Count; j++)
+                lineLevel.Header = headerLine;
+                for (int j = 0; j < allIterations[i].Count; j++)
                 {
-                    Debug.Write($"Row {i}, Iteration {j}:");
-                    for (int k = 0; k < rowIterations[i][j].Cells.Length; k++)
+                    TreeViewItem iterationsLevel = new TreeViewItem();
+                    string headerIteration = $"Iteration {j + 1}: ";
+                    for (int k = 0; k < allIterations[i][j].Cells.Length; k++)
                     {
-                        Debug.Write(DecodeBool(rowIterations[i][j].Cells[k]));
+                        headerIteration += DecodeBool(allIterations[i][j].Cells[k]);
                     }
-                    Debug.WriteLine(".");
+                    iterationsLevel.Header = headerIteration;
+                    lineLevel.IsExpanded = true;
+                    lineLevel.Items.Add(iterationsLevel);
                 }
+                lineLevel.IsExpanded = true;
+                treeView.Items.Add(lineLevel);
             }
-            Debug.WriteLine($"Total possibilites: {totalPossibilities}");
+            displayGorupBox.Content = treeView;
+            return totalPossibilities;
         }
 
         private char DecodeBool(bool boolValue)
@@ -63,11 +82,11 @@ namespace LogicPictureLE
             else return 'X';
         }
 
-        private List<List<Iteration>> CalcRowsNeedIteration()
+        private List<List<Iteration>> CalcLinesNeedIteration(HintData[][] hintDatas)
         {
-            List<List<Iteration>> rows = new List<List<Iteration>>();
-            int width = _singleLevel.LevelData.WidthX;
-            foreach (HintData[] hints in _singleLevel.LevelData.HintsDataVertical)
+            List<List<Iteration>> lines = new List<List<Iteration>>();
+            int width = hintDatas.Length;
+            foreach (HintData[] hints in hintDatas)
             {
                 List<Iteration> iterations = new List<Iteration>();
 
@@ -155,9 +174,9 @@ namespace LogicPictureLE
                         }
                     }
                 }
-                rows.Add(iterations);
+                lines.Add(iterations);
             }
-            return rows;
+            return lines;
         }
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

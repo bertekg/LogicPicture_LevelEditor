@@ -91,7 +91,6 @@
             <Button Command="Open" ToolTip="Open Level (Ctrl+O)">
                 <icons:OpenIcon/>
             </Button>
-            <Separator/>
             <Button Command="Save" ToolTip="Save (Ctrl+S)">
                 <icons:SaveIcon/>
             </Button>
