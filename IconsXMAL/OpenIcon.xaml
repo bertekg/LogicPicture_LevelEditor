@@ -1,11 +1,9 @@
 ﻿<UserControl x:Class="LogicPictureLE.IconsXMAL.OpenIcon"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Canvas Width="47" Height="47">
-        <Path Fill="#FF000000">
-            <Path.Data>
-                <PathGeometry Figures="m 10 37 v -3 h 7 v 3 z m 0 -5 v -3 h 8 v 3 z m 0 -5 v -3 h 10 v 3 z M 4 1 H 27.25 L 40 13.75 V 24.6636 C 38.8303 23.6519 37.4784 22.8454 36 22.2999 V 18 H 23 V 5 H 8 v 34 h 11.2999 c 0.5455 1.4784 1.352 2.8303 2.3637 4 H 4 Z M 27 6.25 V 14 h 7.75 z M 31.5 23 c 1.6764 0 3.269 0.3587 4.7053 1.0036 L 31.5 34.5 42.752 36.8868 C 41.6532 42.0926 37.0329 46 31.5 46 25.1487 46 20 40.8513 20 34.5 20 28.1487 25.1487 23 31.5 23 Z"/>
-            </Path.Data>
-        </Path>
-    </Canvas>
+    <Viewbox>
+        <Canvas Width="24" Height="24">
+            <Path Fill="Black" Data="M6.1,10L4,18V8H21A2,2 0 0,0 19,6H12L10,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H19C19.9,20 20.7,19.4 20.9,18.5L23.2,10H6.1M19,18H6L7.6,12H20.6L19,18Z"/>
+        </Canvas>
+    </Viewbox>
 </UserControl>

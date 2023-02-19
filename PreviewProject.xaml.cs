@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -48,7 +49,15 @@ namespace LogicPictureLE
             {
                 Color color = GetColorFromColorData(_singleLevel.LevelData.ColorsDataTiles[i]);
                 List<TileData> tilesInColor = GetListOfSpecificColor(i);
-                double percentOfColor = PERCENT * tilesInColor.Count / selectedTilesCount;
+                double percentOfColor;
+                if (selectedTilesCount != 0)
+                {
+                    percentOfColor = PERCENT * tilesInColor.Count / selectedTilesCount;
+                }
+                else
+                {
+                    percentOfColor = 0;
+                }
                 double percentOfAll = PERCENT * tilesInColor.Count / total;
                 ColorDetail cdTemp = new ColorDetail(i, color, tilesInColor.Count, percentOfColor, percentOfAll);
                 colors.Add(cdTemp);
@@ -181,6 +190,14 @@ namespace LogicPictureLE
         private void button_FinalLangOther_Click(object sender, RoutedEventArgs e)
         {
             UpdateLanguage(Lang.Other);
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Return || e.Key == Key.Escape || e.Key == Key.Enter || e.Key == Key.Back)
+            {
+                Close();
+            }
         }
     }
 }

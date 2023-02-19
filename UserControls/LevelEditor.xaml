@@ -57,7 +57,7 @@
                              Grid.Row="1" Grid.Column="1"/>
                     <Button Command="local:CustomCommands.UpdateLevelDimension" 
                             Grid.Row="2" Grid.ColumnSpan="2" Content="Update"
-                            ToolTip="Update Alt+U"/>
+                            ToolTip="Alt+U"/>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Basic colors">
@@ -85,7 +85,8 @@
                                       SelectedColorChanged="CpMarkerColor_SelectedColorChanged"/>
                 </Grid>
             </GroupBox>
-            <Button Command="local:CustomCommands.ClearAllTilesData" Content="Clear All Tiles Data"/>
+            <Button Command="local:CustomCommands.ClearAllTilesData" Content="Clear All Tiles Data"
+                    ToolTip="Alt+C"/>
         </StackPanel>
         <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="5"/>
         <Rectangle Name="rectangle_Background" Grid.Column="2" Fill="White"/>

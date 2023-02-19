@@ -94,6 +94,9 @@
     <Compile Include="IconsXMAL\PreviewProjectIcon.xaml.cs">
       <DependentUpon>PreviewProjectIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IconsXMAL\QuitIcon.xaml.cs">
+      <DependentUpon>QuitIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IconsXMAL\SaveIcon.xaml.cs">
       <DependentUpon>SaveIcon.xaml</DependentUpon>
     </Compile>
@@ -147,6 +150,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="IconsXMAL\PreviewProjectIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="IconsXMAL\QuitIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

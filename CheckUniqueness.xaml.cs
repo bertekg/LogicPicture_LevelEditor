@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 
 namespace LogicPictureLE
 {
@@ -12,13 +13,13 @@ namespace LogicPictureLE
         public CheckUniqueness()
         {
             InitializeComponent();
-            Window_CheckUniqueness.Title = "Check Uniqueness - Default";
+            Title = "Check Uniqueness - Default";
         }
 
         public CheckUniqueness(SingleLevel level)
         {
             InitializeComponent();
-            Window_CheckUniqueness.Title = "Check Uniqueness - Single Level";
+            Title = "Check Uniqueness - Single Level";
             _singleLevel = level;
 
             createdLevelView.Content = new VisualizationSingleLevel(_singleLevel, true, false);
@@ -157,6 +158,14 @@ namespace LogicPictureLE
                 rows.Add(iterations);
             }
             return rows;
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Return || e.Key == Key.Escape || e.Key == Key.Enter || e.Key == Key.Back)
+            {
+                Close();
+            }
         }
     }
 

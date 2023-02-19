@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
@@ -239,28 +238,28 @@ namespace LogicPictureLE
             ("About Program", "About Program", typeof(CustomCommands),
                 new InputGestureCollection()
                 {
-                    new KeyGesture(Key.F1, ModifierKeys.Alt)
+                    new KeyGesture(Key.F1)
                 } );
 
         public static readonly RoutedUICommand Exit = new RoutedUICommand
             ("Exit", "Exit", typeof(CustomCommands),
                 new InputGestureCollection()
                 {
-                    new KeyGesture(Key.Q, ModifierKeys.Alt)
+                    new KeyGesture(Key.Q, ModifierKeys.Control)
                 } );
 
         public static readonly RoutedUICommand PreviewProject = new RoutedUICommand
             ("Preview Project", "Preview Project", typeof(CustomCommands),
                 new InputGestureCollection()
                 {
-                    new KeyGesture(Key.P, ModifierKeys.Alt)
+                    new KeyGesture(Key.P, ModifierKeys.Control)
                 } );
 
         public static readonly RoutedCommand CheckUniqueness = new RoutedUICommand
             ("Check Uniqueness", "Check Uniqueness", typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.U, ModifierKeys.Alt)
+                new KeyGesture(Key.U, ModifierKeys.Control)
             } );
     }
 }

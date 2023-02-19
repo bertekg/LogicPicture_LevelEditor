@@ -4,9 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
-        xmlns:usercontrols="clr-namespace:LogicPictureLE.UserControls"
         mc:Ignorable="d"
-        Title="Preview Project" Width="1280" Height="720" >
+        Title="Preview Project" Width="1280" Height="720" KeyDown="Window_KeyDown">
     <TabControl>
         <TabItem Header="Basic info">
             <Grid>
