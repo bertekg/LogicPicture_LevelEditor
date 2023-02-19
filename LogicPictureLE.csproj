@@ -119,6 +119,9 @@
     <Compile Include="UserControls\UsedColorControl.xaml.cs">
       <DependentUpon>UsedColorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\VisualizationSingleLevel.xaml.cs">
+      <DependentUpon>VisualizationSingleLevel.xaml</DependentUpon>
+    </Compile>
     <Page Include="AboutProgram.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\UsedColorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\VisualizationSingleLevel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

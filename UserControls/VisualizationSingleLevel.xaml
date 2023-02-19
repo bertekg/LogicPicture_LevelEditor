@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="LogicPictureLE.UserControls.VisualizationSingleLevel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+    <Viewbox Stretch="Uniform">
+        <Grid Name="gridBackgroundGrid" Background="Gray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid Name="gridHintsVertical" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="5"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="1" Grid.Row="1" Grid.Column="0" Foreground="Red" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Text="1" Grid.Row="1" Grid.Column="1" Foreground="Green" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Text="1" Grid.Row="3" Grid.Column="0" Foreground="Blue" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Text="1" Grid.Row="3" Grid.Column="1" Foreground="Yellow" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Grid>
+            <Grid Name="gridHintsHorizontal" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="1" Grid.Row="0" Grid.Column="1" Foreground="Red" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Text="1" Grid.Row="0" Grid.Column="3" Foreground="Green" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Text="1" Grid.Row="1" Grid.Column="1" Foreground="Blue" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Text="1" Grid.Row="1" Grid.Column="3" Foreground="Yellow" FontSize="35" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Grid>
+            <Grid Name="gridPicture" Grid.Row="1" Grid.Column="1" Background="Black">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="5"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Fill="Brown" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3"/>
+                <Rectangle Fill="Lavender" Grid.Row="1" Grid.Column="1"/>
+                <Rectangle Fill="Lavender" Grid.Row="1" Grid.Column="3"/>
+                <Rectangle Fill="Lavender" Grid.Row="3" Grid.Column="1"/>
+                <Rectangle Fill="Lavender" Grid.Row="3" Grid.Column="3"/>
+            </Grid>
+        </Grid>
+    </Viewbox>
+</UserControl>

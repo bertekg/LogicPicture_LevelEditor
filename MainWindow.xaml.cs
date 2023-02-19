@@ -10,8 +10,6 @@ using System.IO;
 using LogicPictureLE.UserControls;
 using System.Xml.Serialization;
 using System.Xml;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace LogicPictureLE
 {
@@ -128,11 +126,12 @@ namespace LogicPictureLE
         }
         private void commandBinding_Save_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            CalcHintsData();
+            SingleLevel singleLevel = singleLevelEditor.GetSingleLevelData();
+            if (singleLevel == null) return;
+            singleLevel.CalcHintsData();
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "XML|*.xml";
             saveFileDialog.Title = "Save Level File";
-            SingleLevel singleLevel = singleLevelEditor.GetSingleLevelData();
             string defaultFileName = string.Concat("S_", singleLevel.ProjectStoryEN.Title, "_", 
                 singleLevel.LevelData.WidthX.ToString("D2"), "_", singleLevel.LevelData.HeightY.ToString("D2"));
             saveFileDialog.FileName = defaultFileName;
@@ -199,130 +198,6 @@ namespace LogicPictureLE
                 }
             }
         }
-        private void CalcHintsData()
-        {
-            singleLevel.LevelData.HintsDataVertical = new HintData[singleLevel.LevelData.HeightY][];
-            for (byte y = 0; y < singleLevel.LevelData.HeightY; y++)
-            {
-                int previousColorId = -1;
-                byte currentIdCombo = 0;
-                List<HintData> verticalHints = new List<HintData>();
-                for (byte x = 0; x < singleLevel.LevelData.WidthX; x++)
-                {                  
-                    TileData tileDataFound = singleLevel.LevelData.TilesData[x][y];
-                    if (tileDataFound.IsSelected)
-                    {
-                        if (tileDataFound.ColorID  == previousColorId)
-                        {
-                            currentIdCombo++;
-                        }
-                        else if (previousColorId >= 0)
-                        {
-                            HintData hdTemp = new HintData();
-                            hdTemp.ColorID = (byte)previousColorId;
-                            hdTemp.Value = currentIdCombo;
-                            verticalHints.Add(hdTemp);
-                            currentIdCombo = 1;
-                        }
-                        else
-                        {
-                            currentIdCombo = 1;
-                        }
-                        previousColorId = tileDataFound.ColorID;
-                    }
-                    else
-                    {
-                        if (currentIdCombo > 0)
-                        {
-                            HintData hdTemp = new HintData();
-                            hdTemp.ColorID = (byte)previousColorId;
-                            hdTemp.Value = currentIdCombo;
-                            verticalHints.Add(hdTemp);
-                            currentIdCombo = 0;
-                            previousColorId = -1;
-                        }
-                    }
-                }
-                if (currentIdCombo > 0)
-                {
-                    HintData hdTemp = new HintData();
-                    hdTemp.ColorID = (byte)(previousColorId);
-                    hdTemp.Value = currentIdCombo;
-                    verticalHints.Add(hdTemp);
-                }
-                if (verticalHints.Count == 0)
-                {
-                    verticalHints.Add(new HintData(0, 0));
-                }
-                singleLevel.LevelData.HintsDataVertical[y] = ConvertListToArray(verticalHints);
-            }
-
-            singleLevel.LevelData.HintsDataHorizontal = new HintData[singleLevel.LevelData.WidthX][];
-            for (byte x = 0; x < singleLevel.LevelData.WidthX; x++)
-            {
-                int prevCellId = -1;
-                byte currentIdCombo = 0;
-                List<HintData> horizontalHints = new List<HintData>();
-                for (byte y = singleLevel.LevelData.HeightY; y > 0; y--)
-                {
-                    TileData tileDataFound = singleLevel.LevelData.TilesData[x][y -1];
-                    if (tileDataFound.IsSelected)
-                    {
-                        if (tileDataFound.ColorID == prevCellId)
-                        {
-                            currentIdCombo++;
-                        }
-                        else if (prevCellId >= 0)
-                        {
-                            HintData hint = new HintData();
-                            hint.ColorID = (byte)(prevCellId);
-                            hint.Value = currentIdCombo;
-                            horizontalHints.Add(hint);
-                            currentIdCombo = 1;
-                        }
-                        else
-                        {
-                            currentIdCombo = 1;
-                        }
-                        prevCellId = tileDataFound.ColorID;
-                    }
-                    else
-                    {
-                        if (currentIdCombo > 0)
-                        {
-                            HintData hdTemp = new HintData();
-                            hdTemp.ColorID = (byte)(prevCellId);
-                            hdTemp.Value = currentIdCombo;
-                            horizontalHints.Add(hdTemp);
-                            currentIdCombo = 0;
-                            prevCellId = -1;
-                        }
-                    }
-                }
-                if (currentIdCombo > 0)
-                {
-                    HintData hdTemp = new HintData();
-                    hdTemp.ColorID = (byte)(prevCellId);
-                    hdTemp.Value = currentIdCombo;
-                    horizontalHints.Add(hdTemp);
-                }
-                if (horizontalHints.Count == 0)
-                {
-                    horizontalHints.Add(new HintData(0, 0));
-                }
-                singleLevel.LevelData.HintsDataHorizontal[x] = ConvertListToArray(horizontalHints);
-            }
-        }
-
-        private HintData[] ConvertListToArray(List<HintData> listHints)
-        {
-            HintData[] arrayHints = new HintData[listHints.Count];
-            for (int i = 0; i < listHints.Count; i++)
-            {
-                arrayHints[i] = listHints[i];
-            }
-            return arrayHints;
-        }
 
         private void commandBinding_Exit_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -341,7 +216,7 @@ namespace LogicPictureLE
 
         private void commandBinding_PreviewProject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            CalcHintsData();
+            singleLevel.CalcHintsData();
             PreviewProject previewProject = new PreviewProject(singleLevel);
             previewProject.ShowDialog();
         }
@@ -353,7 +228,7 @@ namespace LogicPictureLE
 
         private void commandBinding_CheckUniqueness_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            CalcHintsData();
+            singleLevel.CalcHintsData();
             CheckUniqueness checkUniqueness = new CheckUniqueness(singleLevel);
             checkUniqueness.ShowDialog();
         }
