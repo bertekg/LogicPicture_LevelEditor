@@ -19,8 +19,17 @@ namespace LogicPictureLE
             SetCultureInfo("en-EN");
             InitializeComponent();
             InitialNewSingleLevel();
-            OpenFileCore("S_Red Heart_05_05.xml");
+            InitialFileLoad("S_Red Heart_05_05.xml");
         }
+
+        private void InitialFileLoad(string initialFileToLoad)
+        {
+            if (File.Exists(initialFileToLoad))
+            {
+                OpenFileCore("S_Red Heart_05_05.xml");
+            }
+        }
+
         private void InitialNewSingleLevel()
         {
             NewLevelWizard newLevelWizard = new NewLevelWizard();
@@ -29,7 +38,7 @@ namespace LogicPictureLE
             newLevelWizard.Close();
             grid_MainContent.Children.Clear();
             singleLevelEditor = new SingleLevelEditor(singleLevel);
-            singleLevelEditor.tabItem_LevelData.IsSelected = true;
+            //singleLevelEditor.tabItem_LevelData.IsSelected = true;
             grid_MainContent.Children.Add(singleLevelEditor);
         }
         SingleLevel singleLevel;
@@ -88,14 +97,14 @@ namespace LogicPictureLE
             }
         }
 
-        private void OpenFileCore(string openFilePath)
+        private void OpenFileCore(string filePath)
         {
             try
             {
                 //string contenJSON = File.ReadAllText(openFileDialog.FileName);
                 //singleLevel = JsonConvert.DeserializeObject<SingleLevel>(contenJSON);
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(openFilePath);
+                xmlDocument.Load(filePath);
                 string xmlString = xmlDocument.OuterXml;
                 using (StringReader read = new StringReader(xmlString))
                 {
