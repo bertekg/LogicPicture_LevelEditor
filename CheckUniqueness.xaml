@@ -3,30 +3,130 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LogicPictureLE"
         mc:Ignorable="d"
         Title="Check Uniqueness" Height="600" Width="1200" KeyDown="Window_KeyDown">
+    <Window.CommandBindings>
+        <CommandBinding Command="local:CustomCommandsUniq.CalcIteration" CanExecute="commandBinding_CalcIteration_CanExecute" Executed="commandBinding_CalcIteration_Executed"/>
+        <CommandBinding Command="local:CustomCommandsUniq.CalcSolutions" CanExecute="commandBinding_CalcSolutions_CanExecute" Executed="commandBinding_CalcSolutions_Executed"/>
+        <CommandBinding Command="local:CustomCommandsUniq.CalcAll" CanExecute="commandBinding_CalcAll_CanExecute" Executed="commandBinding_CalcAll_Executed"/>
+    </Window.CommandBindings>
     <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="IsReadOnly" Value="True"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Text" Value="Not calculated"/>
+            </Style>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Content="Calc" Click="Button_Click" HorizontalAlignment="Center" Padding="5"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="Padding" Value="5"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button Content="Calc All Iterations" Command="local:CustomCommandsUniq.CalcIteration" ToolTip="Alt+1"/>
+            <Button Content="Calc Possible Solutions" Command="local:CustomCommandsUniq.CalcSolutions" ToolTip="Alt+2"/>
+            <Button Content="Calc Both Sptes" Command="local:CustomCommandsUniq.CalcAll" ToolTip="Alt+3"/>
+        </StackPanel>
         <Grid Grid.Row="1">
+            <Grid.Resources>
+                <Style TargetType="GroupBox">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <GroupBox Header="Created single level view" Name="createdLevelView"/>
+            <GroupBox Header="Created single level view" Name="createdLevelView" VerticalAlignment="Top"/>
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
             <GroupBox Header="Iteration Information" Grid.Column="2">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    <TextBlock Text="Selected Method"
+                                       Grid.Row="0" Grid.Column="0"/>
+                    <TextBox Name="textBox_SlecectedMethod" Grid.Row="0" Grid.Column="1" Text="Not selected"/>
+                    <GroupBox Header="Vertical hints iterations" Grid.Row="1">
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Count"
+                                       Grid.Row="0" Grid.Column="0"/>
+                                <TextBox Name="textBox_VerticalHintsIterationCount" Grid.Row="0" Grid.Column="1"/>
+                                <TextBlock Text="Combination"
+                                       Grid.Row="1" Grid.Column="0"/>
+                                <TextBox Name="textBox_VerticalHintsIterationCombination" Grid.Row="1" Grid.Column="1"/>
+                            </Grid>
+                            <GroupBox Name="VerticalHintsIteration" Header="Data TreeView" Grid.Row="1"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Horizontal hints iterations" Grid.Row="1" Grid.Column="1">
+                        <Grid Grid.Row="1" Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Count"
+                                       Grid.Row="0" Grid.Column="0"/>
+                                <TextBox Name="textBox_HorizontalHintsIterationCount" Grid.Row="0" Grid.Column="1"/>
+                                <TextBlock Text="Combination"
+                                       Grid.Row="1" Grid.Column="0"/>
+                                <TextBox Name="textBox_HorizontalHintsIterationCombination" Grid.Row="1" Grid.Column="1"/>
+                            </Grid>
+                            <GroupBox Name="HorizontalHintsIteration" Header="Data TreeView" Grid.Row="1"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </GroupBox>
+            <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"/>
+            <GroupBox Header="Detected possible solution" Grid.Column="4">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -37,30 +137,15 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Vertical hints iteration total" Margin="5"/>
-                            <TextBox Name="textBox_VerticalHintsIterationTotal" Text="Nothing" IsReadOnly="True" Grid.Column="1" Margin="5"/>
+                            <TextBlock Text="Possible solution count" Grid.Column="0"/>
+                            <TextBox Name="textBox_SolutionCount" Grid.Column="1"/>
                         </Grid>
-                        <GroupBox Name="VerticalHintsIteration" Header="Vertical hints TreeView" Grid.Row="1"/>
                     </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Horizontal hints iteration total" Margin="5"/>
-                            <TextBox Name="textBox_HorizontalHintsIterationTotal" Text="Nothing" IsReadOnly="True" Grid.Column="1" Margin="5"/>
-                        </Grid>
-                        <GroupBox Name="HorizontalHintsIteration" Header="Horizontal hints TreeView" Grid.Row="1"/>
-                    </Grid>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <WrapPanel Name="AllSolutionsGroupBox" Orientation="Vertical"/>
+                    </ScrollViewer>
                 </Grid>
             </GroupBox>
-            <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"/>
-            <GroupBox Header="Detected possible solution" Grid.Column="4"/>
         </Grid>
     </Grid>
 </Window>

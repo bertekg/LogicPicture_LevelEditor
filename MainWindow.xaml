@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LogicPictureLE"
         xmlns:icons ="clr-namespace:LogicPictureLE.IconsXMAL"
         mc:Ignorable="d"
-        Title="Logic Picture - PC Level Editor" Width="1280" Height="720" >
+        Title="Logic Picture - PC Level Editor" Width="1280" Height="720">
     <Window.CommandBindings>
         <CommandBinding x:Name="commandBinding_New" Command="New" CanExecute="commandBinding_New_CanExecute" Executed="commandBinding_New_Executed"/>
         <CommandBinding x:Name="commandBinding_Open" Command="Open" CanExecute="commandBinding_Open_CanExecute" Executed="commandBinding_Open_Executed"/>
