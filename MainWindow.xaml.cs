@@ -19,14 +19,14 @@ namespace LogicPictureLE
             SetCultureInfo("en-EN");
             InitializeComponent();
             InitialNewSingleLevel();
-            InitialFileLoad("S_Red Heart_05_05.xml");
+            InitialFileLoad("Test01.xml");
         }
 
         private void InitialFileLoad(string initialFileToLoad)
         {
             if (File.Exists(initialFileToLoad))
             {
-                OpenFileCore("S_Red Heart_05_05.xml");
+                OpenFileCore(initialFileToLoad);
             }
         }
 

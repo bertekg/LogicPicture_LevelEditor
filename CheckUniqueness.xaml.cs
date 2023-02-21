@@ -34,12 +34,12 @@ namespace LogicPictureLE
 
         private void CalcIterations()
         {
-            _rowIterations = CalcLinesNeedIteration(_singleLevel.LevelData.HintsDataVertical);
+            _rowIterations = CalcLinesNeedIteration(_singleLevel.LevelData.HintsDataVertical, _singleLevel.LevelData.WidthX);
             _iterationCountsVertical = UpdateIteration(_rowIterations, _singleLevel.LevelData.HintsDataVertical, VerticalHintsIteration, "Row");
             textBox_VerticalHintsIterationCount.Text = _iterationCountsVertical.Count.ToString();
             textBox_VerticalHintsIterationCombination.Text = _iterationCountsVertical.Combination.ToString();
 
-            _columnIterations = CalcLinesNeedIteration(_singleLevel.LevelData.HintsDataHorizontal);
+            _columnIterations = CalcLinesNeedIteration(_singleLevel.LevelData.HintsDataHorizontal, _singleLevel.LevelData.HeightY);
             _iterationCountsHorizontal = UpdateIteration(_columnIterations, _singleLevel.LevelData.HintsDataHorizontal, HorizontalHintsIteration, "Column");
             textBox_HorizontalHintsIterationCount.Text = _iterationCountsHorizontal.Count.ToString();
             textBox_HorizontalHintsIterationCombination.Text = _iterationCountsHorizontal.Combination.ToString();
@@ -313,7 +313,7 @@ namespace LogicPictureLE
         public struct IterationCounts
         {
             public int Count;
-            public int Combination;
+            public long Combination;
         }
 
         private char DecodeBool(bool boolValue)
@@ -322,10 +322,9 @@ namespace LogicPictureLE
             else return 'X';
         }
 
-        private List<List<Iteration>> CalcLinesNeedIteration(HintData[][] hintDatas)
+        private List<List<Iteration>> CalcLinesNeedIteration(HintData[][] hintDatas, int length)
         {
             List<List<Iteration>> lines = new List<List<Iteration>>();
-            int width = hintDatas.Length;
             foreach (HintData[] hints in hintDatas)
             {
                 List<Iteration> iterations = new List<Iteration>();
@@ -355,16 +354,16 @@ namespace LogicPictureLE
                     if (startsInitialIndex.Length <= 0 || hints[0].Value == 0) 
                     {
                         Iteration iterationZero = new Iteration();
-                        bool[] cellsZero = new bool[width];
+                        bool[] cellsZero = new bool[length];
                         iterationZero.Cells = cellsZero;
                         iterations.Add(iterationZero);
                         break; }
 
-                    if ((startsInitialIndex[0] + indexOffset[0] + sum) >= width)
+                    if ((startsInitialIndex[0] + indexOffset[0] + sum) >= length)
                         looping = false;
 
                     Iteration iteration = new Iteration();
-                    bool[] cells = new bool[width];
+                    bool[] cells = new bool[length];
                     for (int i = 0; i < startsInitialIndex.Length; i++)
                     {
                         for (int j = 0; j < hints[i].Value; j++)
@@ -376,20 +375,25 @@ namespace LogicPictureLE
                     iterations.Add(iteration);
 
                     indexOffset[maxIndex]++;
-                    if (startsInitialIndex[maxIndex] + indexOffset[maxIndex] + hints[maxIndex].Value > width)
+                    int checkReachOver = startsInitialIndex[maxIndex] + indexOffset[maxIndex] + hints[maxIndex].Value;
+                    if (checkReachOver > length)
                     {
                         bool shift = true;
-                        int indexShift = maxIndex;
+                        int indexShift = 0;
+                        if (maxIndex > 0)
+                        {
+                            indexShift = maxIndex - 1;
+                        }
                         while (shift)
                         {
                             if (indexShift > 0)
                             {
-                                int temp = startsInitialIndex[indexShift] + 1;
+                                int temp = startsInitialIndex[indexShift] + 1 + hints[indexShift].Value;
                                 for (int k = indexShift; k < maxIndex; k++)
                                 {
-                                    temp += 1 + startsInitialIndex[k + 1];
+                                    temp += 1 + hints[k + 1].Value;
                                 }
-                                if (temp < width)
+                                if (temp > length)
                                 {
                                     indexShift--;
                                 }
