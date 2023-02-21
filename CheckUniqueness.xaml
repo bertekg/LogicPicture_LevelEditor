@@ -38,7 +38,7 @@
             </StackPanel.Resources>
             <Button Content="Calc All Iterations" Command="local:CustomCommandsUniq.CalcIteration" ToolTip="Alt+1"/>
             <Button Content="Calc Possible Solutions" Command="local:CustomCommandsUniq.CalcSolutions" ToolTip="Alt+2"/>
-            <Button Content="Calc Both Sptes" Command="local:CustomCommandsUniq.CalcAll" ToolTip="Alt+3"/>
+            <Button Content="Calc Both Steps" Command="local:CustomCommandsUniq.CalcAll" ToolTip="Alt+3"/>
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.Resources>

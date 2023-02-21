@@ -55,7 +55,7 @@ namespace LogicPictureLE
             textBox_SlecectedMethod.Text = _selctionMethod.ToString();
         }
 
-        private void CalcPossibleSolution()
+        private void CalcPossibleSolutions()
         {
             if (_rowIterations == null || _columnIterations == null)
             {
@@ -65,73 +65,54 @@ namespace LogicPictureLE
             AllSolutionsGroupBox.Children.Clear();
 
             int foundSame = 0;
-            if (_selctionMethod == SelctionMethod.Vertical)
+            if (true)
             {
-                int[][] serchIter = new int[_iterationCountsVertical.Combination][];
                 int dimension = _singleLevel.LevelData.HeightY;
-                serchIter[0] = new int[dimension];
-                int[,] tiles = MakeAllTiles(serchIter[0]);
-                HintData[][] hintDatasHorizontal = MakeHorizontalHints(tiles);
-                bool same = CheckSameHinstHorizontal(hintDatasHorizontal);
-                if (same)
+                int[] next = new int[dimension];
+
+                for (int i = 0; i < _iterationCountsVertical.Combination; i++)
                 {
-                    foundSame++;
-                    TextBlock textBlock = new TextBlock() { Text = $"Option {foundSame}" };
-                    AllSolutionsGroupBox.Children.Add(textBlock);
-                    Viewbox viewBase = new Viewbox() { Stretch = Stretch.Uniform };
-                    Image image = new Image()
-                    {
-                        Stretch = Stretch.Uniform,
-                        HorizontalAlignment = HorizontalAlignment.Stretch,
-                        VerticalAlignment = VerticalAlignment.Stretch
-                    };
-                    RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
-                    image.Source = MakePictureFromTiles(tiles);
-                    viewBase.Child = image;
-                    AllSolutionsGroupBox.Children.Add(viewBase);
-                }
-                int[] prev = serchIter[0];
-                
-                for (int i = 1; i < _iterationCountsVertical.Combination; i++)
-                {
-                    serchIter[i] = new int[dimension];
-                    prev = serchIter[i - 1];
+                    int[,] tiles = MakeAllTiles(next);
+                    int[] serchIter = next;
                     bool makeInc = true;
                     int incIndex = 0;
-                    while (makeInc)
+                    if (i < _iterationCountsVertical.Combination - 1)
                     {
-                        int newInc = prev[incIndex] + 1;
-                        if (newInc < _rowIterations[incIndex].Count)
+                        while (makeInc)
                         {
-                            for (int j = 0; j < prev.Length; j++)
+                            int newInc = serchIter[incIndex] + 1;
+                            if (newInc < _rowIterations[incIndex].Count)
                             {
-                                if (j == incIndex)
+                                for (int j = 0; j < serchIter.Length; j++)
                                 {
-                                    serchIter[i][j] = newInc;
+                                    if (j == incIndex)
+                                    {
+                                        serchIter[j] = newInc;
+                                    }
+                                    else if (j < incIndex)
+                                    {
+                                        serchIter[j] = 0;
+                                    }
+                                    else
+                                    {
+                                        serchIter[j] = serchIter[j];
+                                    }
+                                    makeInc = false;
                                 }
-                                else if (j < incIndex)
-                                {
-                                    serchIter[i][j] = 0;
-                                }
-                                else
-                                {
-                                    serchIter[i][j] = prev[j];
-                                }
-                                makeInc = false;
+                            }
+                            else
+                            {
+                                incIndex++;
                             }
                         }
-                        else
-                        {
-                            incIndex++;
-                        }
                     }
-                    tiles = MakeAllTiles(serchIter[i]);
-                    hintDatasHorizontal = MakeHorizontalHints(tiles);
-                    same = CheckSameHinstHorizontal(hintDatasHorizontal);
+                    next = serchIter;
+                    HintData[][] hintDatasHorizontal = MakeHorizontalHints(tiles);
+                    bool same = CheckSameHinstHorizontal(hintDatasHorizontal);
                     if (same)
                     {
                         foundSame++;
-                        TextBlock textBlock = new TextBlock() { Text = $"Option {foundSame}" };
+                        TextBlock textBlock = new TextBlock() { Text = $"Solution {foundSame}" };
                         AllSolutionsGroupBox.Children.Add(textBlock);
                         Viewbox viewBase = new Viewbox() { Stretch = Stretch.Uniform };
                         Image image = new Image() { Stretch = Stretch.Uniform, HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -144,10 +125,6 @@ namespace LogicPictureLE
                 }
             }
             textBox_SolutionCount.Text = foundSame.ToString();
-            for (int i = 0; i < foundSame; i++)
-            {
-                TextBlock textBlock = new TextBlock() { Text = $"Option {i+1}" };
-            }
         }
 
         private bool CheckSameHinstHorizontal(HintData[][] hintDatasHorizontal)
@@ -272,7 +249,7 @@ namespace LogicPictureLE
         private void CalcAll()
         {
             CalcIterations();
-            CalcPossibleSolution();
+            CalcPossibleSolutions();
         }
 
         private IterationCounts UpdateIteration(List<List<Iteration>> allIterations, HintData[][] hintDatas, GroupBox displayGorupBox, string nameType)
@@ -477,7 +454,7 @@ namespace LogicPictureLE
 
         private void commandBinding_CalcSolutions_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            CalcPossibleSolution();
+            CalcPossibleSolutions();
         }
 
         private void commandBinding_CalcAll_CanExecute(object sender, CanExecuteRoutedEventArgs e)
